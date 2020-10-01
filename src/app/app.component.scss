@@ -1,0 +1,15 @@
+header{
+    background:#0e73ce;
+    height:3rem;
+}
+.content{
+    height: calc(100vh - 3rem);
+    background: #eee;
+    padding-top: .5rem;
+}
+
+.inner-content{
+    width:100%;
+    max-width: 1000px;
+    margin:auto;
+}
