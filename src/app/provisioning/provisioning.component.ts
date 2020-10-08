@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ApiService } from '../shared/services/api.service';
 import { STATIC_DATA } from '../shared/data/static.data';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-provisioning',
@@ -22,7 +22,16 @@ export class ProvisioningComponent implements OnInit {
   applications = STATIC_DATA.applications;
   selectedApplications = [];
 
-  form: FormGroup;
+  applicationForm: FormGroup;
+  levelOneForm: FormGroup;
+  levelTwoForm: FormGroup;
+
+  commonAttributesForms = {
+    FunctionalGroup: 'function_group_id',
+    Centers: 'center_cd',
+    ChannelsID: 'channel_id',
+    ChannelsCD: 'channel_cd'
+  };
 
   constructor(
     private api: ApiService,
@@ -30,9 +39,7 @@ export class ProvisioningComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this. form = this.fb.group({
-      application: ['', Validators.required]
-    });
+    this.buildForms();
 
     if (!this.isStaticData) {
       this.resetData();
@@ -41,21 +48,88 @@ export class ProvisioningComponent implements OnInit {
     }
   }
 
-  addApplication(): void {
-    if (this.form.invalid) {
+  private buildForms(): void {
+    this.applicationForm = this.fb.group({
+      application: ['', Validators.required]
+    });
+    this.levelOneForm = this.fb.group({
+      business_role_id: ['', Validators.required],
+      channel_id: ['', Validators.required],
+      job_duty_id: ['', Validators.required]
+    });
+
+    this.levelTwoForm = new FormGroup({
+      applications: new FormArray([])
+    });
+  }
+
+  get applicationsFormArray(): FormArray {
+    return this.levelTwoForm.get('applications') as FormArray;
+  }
+
+  async addApplication(): Promise<any> {
+    if (this.applicationForm.invalid) {
       return;
     }
-    const app = this.applications.filter( x =>  x.id.toString() === this.form.value.application);
-    this.selectedApplications.unshift(app[0]);
-    this.form.reset();
+    const appId = this.applicationForm.value.application;
+    let app = this.applications.filter( x =>  x.id.toString() === appId)[0] as any;
+
+    const attributes = await this.getApplicationAttributes(appId);
+
+    this.buildApplicationsFormArray(appId);
+
+    app = {
+      ...app,
+      attributes
+    };
+    this.selectedApplications.push(app);
+    this.applicationForm.reset();
+    return;
+  }
+
+  private buildApplicationsFormArray(appId): void{
+    this.applicationsFormArray.push(this.fb.group({
+      app_id: [appId, Validators.required],
+      center_cd: ['', Validators.required],
+      channel_cd: ['', Validators.required],
+      channel_id: ['', Validators.required],
+      function_group_id: ['', Validators.required],
+    }));
+  }
+
+  getAttributeFormName(attributeName): string{
+    const attrNameNoSpace = attributeName.replace(/\ /g, '');
+    return this.commonAttributesForms[attrNameNoSpace];
+  }
+
+  async getApplicationAttributes(appId): Promise<any[]> {
+    const attributes = await this.api.list('attribute/getAllAppAttribute', { appId }).toPromise();
+
+    const attributesWithOptions = [];
+    for await (const attr of attributes) {
+      const options = await this.getAttributeOptions(appId, attr.category);
+      attributesWithOptions.push({
+        ...attr,
+        options
+      });
+    }
+    return attributesWithOptions;
+  }
+
+  async getAttributeOptions(appId, category ): Promise<any> {
+    const options = await this.api.list('attribute/findValuesByCategory', { appId, category}).toPromise();
+    return options;
   }
 
   isAppAlreadySelected(id): boolean{
     return this.selectedApplications.filter( x => x.id === id).length > 0;
   }
 
-  removeApplication(id): void {
+  removeApplication(id, index): void {
     this.selectedApplications = this.selectedApplications.filter( x =>  x.id !== id);
+    this.applicationsFormArray.removeAt(index);
+
+    console.log(this.levelTwoForm.value);
   }
 
   private resetData(): void{
@@ -94,7 +168,28 @@ export class ProvisioningComponent implements OnInit {
     });
   }
 
-  getAttributeOptions(attrID): any {
-    return STATIC_DATA.attributes.filter ( x => x.id === attrID)[0];
+  save(): void {
+    if (this.levelOneForm.invalid || this.levelTwoForm.invalid) {
+      return;
+    }
+
+    const levelOne  = this.levelOneForm.value;
+    const levelTwo  = this.levelTwoForm.value;
+    const data = {
+      ...levelOne,
+      applications: [
+        ...levelTwo.applications
+      ]
+    };
+
+    console.log(data);
+    this.api.create('preset', data).subscribe( x => {
+      this.levelOneForm.reset();
+      this.levelTwoForm.reset();
+    });
   }
+
+  // getAttributeOptions(attrID): any {
+  //   return STATIC_DATA.attributes.filter ( x => x.id === attrID)[0];
+  // }
 }
