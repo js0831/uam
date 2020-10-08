@@ -28,7 +28,7 @@ export class ProvisioningComponent implements OnInit {
 
   commonAttributesForms = {
     FunctionalGroup: 'function_group_id',
-    Centers: 'center_cd',
+    CenterCD: 'center_cd',
     ChannelsID: 'channel_id',
     ChannelsCD: 'channel_cd'
   };
