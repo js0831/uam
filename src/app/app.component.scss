@@ -1,6 +1,27 @@
 header{
     background:#0e73ce;
     height:3rem;
+
+    > div{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        width: 100%;
+        max-width: 1000px;
+        margin:auto;
+    }
+
+    h1{
+        color: #fff;
+        font-size: 1.75rem;
+        font-weight: 300;
+    }
+
+    label{
+        color: #fff;
+        font-size: 0.9rem;
+    }
 }
 .content{
     height: calc(100vh - 3rem);

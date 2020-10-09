@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ProvisioningComponent } from './provisioning/provisioning.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { JkWaitModule } from 'jk-wait';
 
 @NgModule({
   declarations: [
@@ -14,9 +15,10 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    JkWaitModule.forRoot({type: 'SPINNER'}),
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

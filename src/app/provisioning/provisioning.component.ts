@@ -28,7 +28,7 @@ export class ProvisioningComponent implements OnInit {
 
   commonAttributesForms = {
     FunctionalGroup: 'function_group_id',
-    CenterCD: 'center_cd',
+    Centers: 'center_cd',
     ChannelsID: 'channel_id',
     ChannelsCD: 'channel_cd'
   };
@@ -170,6 +170,7 @@ export class ProvisioningComponent implements OnInit {
 
   save(): void {
     if (this.levelOneForm.invalid || this.levelTwoForm.invalid) {
+      alert('All Fields are required');
       return;
     }
 
@@ -186,6 +187,7 @@ export class ProvisioningComponent implements OnInit {
     this.api.create('preset', data).subscribe( x => {
       this.levelOneForm.reset();
       this.levelTwoForm.reset();
+      alert('Success');
     });
   }
 
