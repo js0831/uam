@@ -17,6 +17,7 @@ export class ProvisioningComponent implements OnInit {
     jobDuties: STATIC_DATA.jobDuties,
     channels: STATIC_DATA.channels,
     businessRoles: STATIC_DATA.businessRoles,
+    teams: STATIC_DATA.teams,
   };
 
   applications = STATIC_DATA.applications;
@@ -55,7 +56,8 @@ export class ProvisioningComponent implements OnInit {
     this.levelOneForm = this.fb.group({
       business_role_id: ['', Validators.required],
       channel_id: ['', Validators.required],
-      job_duty_id: ['', Validators.required]
+      job_duty_id: ['', Validators.required],
+      team_id: ['', Validators.required]
     });
 
     this.levelTwoForm = new FormGroup({
@@ -137,6 +139,7 @@ export class ProvisioningComponent implements OnInit {
       jobDuties: [],
       channels: [],
       businessRoles: [],
+      teams: []
     };
 
     this.applications = [];
@@ -157,6 +160,9 @@ export class ProvisioningComponent implements OnInit {
     });
     this.getListOf('channel').then( x => {
       this.firstLeveldata.channels = x;
+    });
+    this.getListOf('team').then( x => {
+      this.firstLeveldata.teams = x;
     });
   }
 

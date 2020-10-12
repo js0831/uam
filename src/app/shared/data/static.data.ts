@@ -125,6 +125,28 @@ export const STATIC_DATA = {
             name: 'CSS'
         }
     ],
+    teams: [
+        {
+            id: 1,
+            name: 'CS_SC_14'
+        },
+        {
+            id: 2,
+            name: 'VCC'
+        },
+        {
+            id: 3,
+            name: 'OBS'
+        },
+        {
+            id: 4,
+            name: 'RET'
+        },
+        {
+            id: 5,
+            name: 'CSS'
+        }
+    ],
 
     attributes: [
         {

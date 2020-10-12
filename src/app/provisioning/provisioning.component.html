@@ -20,6 +20,13 @@
                     <option [value]="ch.id" *ngFor="let ch of firstLeveldata.channels">{{ch.name}}</option>
             </select>
         </div>
+        <div class="form-group">
+            <label>Team</label>
+            <select class="form-control form-control-sm" formControlName="team_id">
+                    <option></option>
+                    <option [value]="ch.id" *ngFor="let ch of firstLeveldata.teams">{{ch.name}}</option>
+            </select>
+        </div>
 </form>
 
 <form [formGroup]="applicationForm" class="application">
