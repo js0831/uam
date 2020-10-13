@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiURL: 'http://localhost:4003/api/',
-  // apiURL: 'https://moody-newt-51.loca.lt/api/',
+  // apiURL: 'http://localhost:4003/api/',
+  apiURL: 'https://stale-goose-99.loca.lt/api/',
   staticData: false
 };
 
