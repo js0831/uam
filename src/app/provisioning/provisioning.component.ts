@@ -77,8 +77,8 @@ export class ProvisioningComponent implements OnInit {
     let app = this.applications.filter( x =>  x.id.toString() === appId)[0] as any;
 
     const attributes = await this.getApplicationAttributes(appId);
-
-    this.buildApplicationsFormArray(appId);
+    const attributeDefaultValues: any = await this.getApplicationAttributeDefaults(appId);
+    this.buildApplicationsFormArray(appId, attributeDefaultValues.defaultAppConfigs[0]);
 
     app = {
       ...app,
@@ -89,19 +89,52 @@ export class ProvisioningComponent implements OnInit {
     return;
   }
 
-  private buildApplicationsFormArray(appId): void{
-    this.applicationsFormArray.push(this.fb.group({
+  private buildApplicationsFormArray(appId, defaultValues): void{
+
+    const arrayFormGroup = this.fb.group({
       app_id: [appId, Validators.required],
       center_cd: ['', Validators.required],
       channel_cd: ['', Validators.required],
       channel_id: ['', Validators.required],
       function_group_id: ['', Validators.required],
-    }));
+    });
+
+    if (defaultValues) {
+      arrayFormGroup.patchValue({
+        center_cd: defaultValues.centerCD,
+        channel_cd: defaultValues.channelCD,
+        channel_id: defaultValues.channelId,
+        function_group_id: defaultValues.functionGroupId,
+      });
+    }
+    this.applicationsFormArray.push(arrayFormGroup);
   }
 
   getAttributeFormName(attributeName): string{
     const attrNameNoSpace = attributeName.replace(/\ /g, '');
     return this.commonAttributesForms[attrNameNoSpace];
+  }
+
+  async getApplicationAttributeDefaults(appId): Promise<any> {
+    const levelOneForm = this.levelOneForm.value;
+    if (
+      !levelOneForm.business_role_id &&
+      !levelOneForm.channel_id &&
+      !levelOneForm.job_duty_id &&
+      !levelOneForm.team_id
+    ) {
+      return new Promise((res, rej) => res({defaultAppConfigs: []}));
+    }
+
+    const levelOneData = {
+      applicationId: appId,
+      businessRoleId: levelOneForm.business_role_id,
+      channelId: levelOneForm.channel_id,
+      jobDutyId: levelOneForm.job_duty_id,
+      teamId: levelOneForm.team_id
+    };
+    const defaults = await this.api.list('default-app-config/getDefaultAttributes', levelOneData).toPromise();
+    return defaults;
   }
 
   async getApplicationAttributes(appId): Promise<any[]> {

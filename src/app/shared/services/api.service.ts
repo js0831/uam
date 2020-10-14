@@ -46,9 +46,8 @@ export class ApiService {
 
   list(ofWhat: string, params?: any): Observable<any>{
     this.wait.start();
-    const paramString = params ? `?${this.objectToParams(params)}` : '';
-    const endpoint = `${environment.apiURL}${ofWhat}/${paramString}`;
-    return this.http.get(endpoint).pipe(map( x => {
+    const endpoint = `${environment.apiURL}${ofWhat}/`;
+    return this.http.get(endpoint, {params}).pipe(map( x => {
       this.wait.end();
       return x;
     }));
@@ -56,9 +55,8 @@ export class ApiService {
 
   listMap(ofWhat: string, params?: any): Observable<any>{
     this.wait.start();
-    const paramString = params ? `?${this.objectToParams(params)}` : '';
-    const endpoint = `${environment.apiURL}${ofWhat}/${paramString}`;
-    return this.http.get(endpoint).pipe(
+    const endpoint = `${environment.apiURL}${ofWhat}/`;
+    return this.http.get(endpoint,  {params}).pipe(
       map( (x: any) => {
         this.wait.end();
         return {
@@ -68,14 +66,5 @@ export class ApiService {
         };
       })
     );
-  }
-
-  private objectToParams(obj: any): string{
-    const keys = Object.keys(obj);
-    let paramsString = '';
-    keys.forEach( key => {
-      paramsString += `${key}=${obj[key]}&`;
-    });
-    return paramsString.slice(0, -1);
   }
 }
