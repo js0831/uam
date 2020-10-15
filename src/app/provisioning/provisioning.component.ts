@@ -22,6 +22,7 @@ export class ProvisioningComponent implements OnInit {
 
   applications = STATIC_DATA.applications;
   selectedApplications = [];
+  selectedRoles = [];
 
   applicationForm: FormGroup;
   levelOneForm: FormGroup;
@@ -54,7 +55,7 @@ export class ProvisioningComponent implements OnInit {
       application: ['', Validators.required]
     });
     this.levelOneForm = this.fb.group({
-      business_role_id: ['', Validators.required],
+      business_role_id: [''],
       channel_id: ['', Validators.required],
       job_duty_id: ['', Validators.required],
       team_id: ['', Validators.required]
@@ -67,6 +68,20 @@ export class ProvisioningComponent implements OnInit {
 
   get applicationsFormArray(): FormArray {
     return this.levelTwoForm.get('applications') as FormArray;
+  }
+
+  addRole(): void {
+    const roleField = this.levelOneForm.get('business_role_id');
+    if (roleField.value.length < 1) {
+      return;
+    }
+    const selectedRole = this.firstLeveldata.businessRoles.filter( x => x.id.toString() === roleField.value);
+    this.selectedRoles.push(selectedRole[0]);
+    roleField.reset();
+  }
+
+  removeRole(id): void{
+    this.selectedRoles = this.selectedRoles.filter(x => x.id !== id);
   }
 
   async addApplication(): Promise<any> {
@@ -154,6 +169,10 @@ export class ProvisioningComponent implements OnInit {
   async getAttributeOptions(appId, category ): Promise<any> {
     const options = await this.api.list('attribute/findValuesByCategory', { appId, category}).toPromise();
     return options;
+  }
+
+  isRoleAlreadySelected(id): boolean {
+    return this.selectedRoles.filter( x => x.id === id).length > 0;
   }
 
   isAppAlreadySelected(id): boolean{

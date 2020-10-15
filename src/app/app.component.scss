@@ -24,7 +24,7 @@ header{
     }
 }
 .content{
-    height: calc(100vh - 3rem);
+    min-height: calc(100vh - 3rem);
     background: #9c9c9c;
     padding-top: .5rem;
 }

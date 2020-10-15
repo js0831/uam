@@ -1,6 +1,6 @@
 .levelOne{
     display:flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     padding:.5rem;
     background:#fff;
@@ -10,16 +10,47 @@
     > div{
         flex:1;
         padding-right:1rem;
+        
 
         &:last-child{
             padding: 0;
+        }
+    }
+
+    .applicationRole{
+        .form-group{
+            > div{
+                display: flex;
+                gap: .5rem;
+            }
+        }
+
+        ul{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            
+            li {
+                display:flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 2rem;
+                border-bottom: 1px dashed #ddd;
+                font-size: .9rem;
+
+                a{
+                    font-size: smaller;
+                    color:blue;
+                    cursor:pointer
+                }
+            }
         }
     }
 }
 
 .level-two {
     position: relative;
-    height: calc(100vh - 15rem);
+    height: calc(100vh - 22rem);
     overflow-y: auto;
     background: #fff;
     padding: .5rem;
