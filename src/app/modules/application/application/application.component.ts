@@ -106,7 +106,7 @@ export class ApplicationComponent implements OnInit {
     this.form.markAllAsTouched();
     const {systemId, translations}: IApplication = this.form.value;
     if (this.form.invalid) {
-      alert('All filds are required');
+      alert('All fields are required');
       return;
     }
 

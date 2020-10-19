@@ -1,45 +1,61 @@
-<div class="language">
-    <form [formGroup]="sourceForm" class="language__input" *ngIf="sourceForm">
-        <select 
-            [ngClass]="{'is-invalid': isInvalid('language')}"
-            class="form-control form-control-sm" formControlName="language">
-            <ng-container *ngFor="let lang of languages">
-                <option [value]="lang.id" *ngIf="!isLanguageAdded(lang.id)">{{lang.langCode}}</option>
-            </ng-container>
-        </select>
-        
-        <input 
-            [ngClass]="{'is-invalid': isInvalid('value')}"
-            type="text" class="form-control form-control-sm" formControlName="value">
+<div class="display">
+    <label>{{displayValue}}</label>
 
-        <button type="button" class="btn btn-sm btn-primary" (click)="add()">add</button>
-    </form>
+    <a (click)="edit()">{{ displayValue ? 'Edit' : 'Add ' + title}} </a>
+</div>
+<div *ngIf="isEdit" class="blocker"></div>
+<div class="language" *ngIf="isEdit">
+    
+    <div class="title">
+        <label>{{title}}</label>
 
-    <form [formGroup]="form" class="language__values">
-        <table>
-            <tr>
-                <td>
-                    Language
-                </td>
-                <td>
-                    Value
-                </td>
-                <td>
-                </td>
-            </tr>
-            <ng-container formArrayName="translations">
-                <tr *ngFor="let text of translationsFormArray.controls; let i = index">
+        <span (click)="close()">×</span>
+    </div>
+
+
+    <div>
+        <form [formGroup]="sourceForm" class="language__input" *ngIf="sourceForm">
+            <select 
+                [ngClass]="{'is-invalid': isInvalid('language')}"
+                class="form-control form-control-sm" formControlName="language">
+                <ng-container *ngFor="let lang of languages">
+                    <option [value]="lang.id" *ngIf="!isLanguageAdded(lang.id)">{{lang.langCode}}</option>
+                </ng-container>
+            </select>
+            
+            <input 
+                [ngClass]="{'is-invalid': isInvalid('value')}"
+                type="text" class="form-control form-control-sm" formControlName="value">
+    
+            <button type="button" class="btn btn-sm btn-primary" (click)="add()">add</button>
+        </form>
+    
+        <form [formGroup]="form" class="language__values">
+            <table>
+                <tr>
                     <td>
-                        {{getLanguageName(text.value.language)}}                        
+                        Language
                     </td>
                     <td>
-                        {{text.value.value}}
+                        Value
                     </td>
                     <td>
-                        <a (click)="delete(i)">delete</a>
                     </td>
                 </tr>
-            </ng-container>               
-        </table>
-    </form>
+                <ng-container formArrayName="translations">
+                    <tr *ngFor="let text of translationsFormArray.controls; let i = index">
+                        <td>
+                            {{getLanguageName(text.value.language)}}                        
+                        </td>
+                        <td>
+                            {{text.value.value}}
+                        </td>
+                        <td>
+                            <a (click)="delete(i)">delete</a>
+                        </td>
+                    </tr>
+                </ng-container>               
+            </table>
+        </form>
+    </div>
 </div>

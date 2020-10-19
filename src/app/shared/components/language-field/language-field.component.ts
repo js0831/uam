@@ -10,7 +10,10 @@ import { ApiService } from '../../services/api.service';
 })
 export class LanguageFieldComponent implements OnInit, OnDestroy{
 
+  @Input() title = '';
   @Input() form: FormGroup;
+  displayValue = '';
+  isEdit = false;
 
   sourceForm: FormGroup;
   languages = [
@@ -35,6 +38,7 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
       value: ['', Validators.required]
     });
     this.form.addControl('translations', this.fb.array([], Validators.required));
+    this.loadDisplayText();
 
     if (environment.staticData){
       return;
@@ -44,6 +48,18 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
     this.api.list('language/getAllLanguage').subscribe( x => {
       this.languages = x.languages;
     });
+  }
+
+  close(): void{
+    this.loadDisplayText();
+    this.isEdit = false;
+  }
+
+  private loadDisplayText(): void{
+    setTimeout( xx => {
+      const found = this.translationsFormArray.value.filter( x => x.language === environment.language.toString());
+      this.displayValue = found.length > 0 ? found[0].value : '';
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -87,4 +103,10 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
   delete(index): void{
     this.translationsFormArray.removeAt(index);
   }
+
+
+  edit(): void{
+    this.isEdit = true;
+  }
+
 }

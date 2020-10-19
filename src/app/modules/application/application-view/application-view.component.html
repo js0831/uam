@@ -64,69 +64,61 @@
     (close)="closeModal()"
     (submit)="submitForm()"
 >
-    <ul class="nav nav-tabs" *ngIf="activeTab !== 'options'">
+    <!-- <ul class="nav nav-tabs" *ngIf="activeTab !== 'options'">
         <li class="nav-item">
             <a class="nav-link active">Details</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" (click)="activeTab='options'">Options</a>
         </li>
-    </ul>
-    <form [formGroup]="form" class="fform" *ngIf="activeTab !== 'options'">
-        <div class="fform__column">
-            <div class="form-group">
-                <label>ID</label> 
-                <input 
-                  formControlName="id" type="text" class="form-control form-control-sm" 
-                  [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}">
-            </div>
-            <div class="form-group">
-                <label>Type</label> 
-                <select 
-                    [ngClass]="{'is-invalid': form.controls.type.invalid && form.controls.type.touched}"
-                    formControlName="type" class="form-control form-control-sm">
-                    <option></option>
-                    <option>String</option>
-                    <option>Numeric</option>
-                    <option>Boolean</option>
-                </select>
-            </div>
+    </ul> -->
+    <form [formGroup]="form" class="fform fform--inline">
+        
+        <div class="form-group">
+            <label>Title: </label>
+            <app-language-field [title]="'Title'" *ngIf="showModal" [form]="form"></app-language-field> 
         </div>
-        <div class="fform__column">
-            <div class="form-group">
-                <label>Title</label>
-                <app-language-field *ngIf="showModal" [form]="form"></app-language-field> 
-                <!-- <input 
-                  formControlName="title" type="text" class="form-control form-control-sm" 
-                  [ngClass]="{'is-invalid': form.controls.title.invalid && form.controls.title.touched}"> -->
-            </div>
+        <div class="form-group">
+            <label>ID: </label> 
+            <input 
+                formControlName="id" type="text" class="form-control form-control-sm" 
+                [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}">
+        </div> 
+        <div class="form-group">
+            <label>Type: </label> 
+            <select 
+                [ngClass]="{'is-invalid': form.controls.type.invalid && form.controls.type.touched}"
+                formControlName="type" class="form-control form-control-sm">
+                <option></option>
+                <option>String</option>
+                <option>Numeric</option>
+                <option>Boolean</option>
+            </select>
         </div>
     </form>
+    <br>
 
-    <ul class="nav nav-tabs" *ngIf="activeTab === 'options'">
-        <li class="nav-item">
-            <a class="nav-link" (click)="activeTab='details'">Details</a>
-        </li>
+    <ul class="nav nav-tabs" >
         <li class="nav-item">
             <a class="nav-link active">Options</a>
           </li>
     </ul>
 
-    <form class="fform fform--inline optionsForm" *ngIf="activeTab === 'options'">
+    <form class="fform fform--inline optionsForm">
         <div class="form-group flex-2" >
-          <label>Description</label>
+          <label>Description:</label>
           <!-- <input type="text" class="form-control form-control-sm"> -->
-          <app-language-field [form]="optionsForm"></app-language-field> 
+          <app-language-field [title]="'Description'" [form]="optionsForm"></app-language-field> 
         </div>
         <div class="form-group">
-            <label>value</label>
+            <label>Value: </label>
             <input type="text" class="form-control form-control-sm">
         </div>
         <button type="button" class="btn btn-sm  btn-primary">Add</button>
     </form>
 
     
-    <div class="table-list optionsList" *ngIf="activeTab === 'options'">  
+    <div class="table-list optionsList" >  
         <table class="table table-sm">
             <thead>
                 <tr> 
