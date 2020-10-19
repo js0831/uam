@@ -1,13 +1,21 @@
 <div class="language">
-    <div class="language__input">
-        <select class="form-control form-control-sm" >
-            <option>en</option>
-            <option>zh_HK</option>
+    <form [formGroup]="sourceForm" class="language__input" *ngIf="sourceForm">
+        <select 
+            [ngClass]="{'is-invalid': isInvalid('language')}"
+            class="form-control form-control-sm" formControlName="language">
+            <ng-container *ngFor="let lang of languages">
+                <option [value]="lang.id" *ngIf="!isLanguageAdded(lang.id)">{{lang.name}}</option>
+            </ng-container>
         </select>
-        <input type="text" class="form-control form-control-sm">
-        <button type="button" class="btn btn-sm btn-primary">add</button>
-    </div>
-    <div class="language__values">
+        
+        <input 
+            [ngClass]="{'is-invalid': isInvalid('value')}"
+            type="text" class="form-control form-control-sm" formControlName="value">
+
+        <button type="button" class="btn btn-sm btn-primary" (click)="add()">add</button>
+    </form>
+
+    <form [formGroup]="form" class="language__values">
         <table>
             <tr>
                 <td>
@@ -19,28 +27,19 @@
                 <td>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    en
-                </td>
-                <td>
-                    Hello
-                </td>
-                <td>
-                    <a>delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    en
-                </td>
-                <td>
-                    Hello
-                </td>
-                <td>
-                    <a>delete</a>
-                </td>
-            </tr>
+            <ng-container formArrayName="translations">
+                <tr *ngFor="let text of translationsFormArray.controls; let i = index">
+                    <td>
+                        {{getLanguageName(text.value.language)}}                        
+                    </td>
+                    <td>
+                        {{text.value.value}}
+                    </td>
+                    <td>
+                        <a (click)="delete(i)">delete</a>
+                    </td>
+                </tr>
+            </ng-container>               
         </table>
-    </div>
+    </form>
 </div>

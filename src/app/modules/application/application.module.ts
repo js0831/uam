@@ -4,11 +4,14 @@ import { ApplicationComponent } from './application/application.component';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicationViewComponent } from './application-view/application-view.component';
+import { TestComponent } from './test/test.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
     path: '',
     component: ApplicationComponent
+    // component: TestComponent
   },
   {
     path: ':id',
@@ -19,10 +22,13 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     ApplicationComponent,
-    ApplicationViewComponent
+    ApplicationViewComponent,
+    TestComponent
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     RouterModule.forChild(routes)
   ]

@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   apiURL: 'http://localhost:4003/api/',
   // apiURL: 'https://stale-goose-99.loca.lt/api/',
-  staticData: false
+  staticData: false,
+  language: 1, // 1: en, 2: zh_HK
 };
 
 /*

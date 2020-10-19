@@ -27,6 +27,7 @@ export class ProvisioningComponent implements OnInit {
   applicationForm: FormGroup;
   levelOneForm: FormGroup;
   levelTwoForm: FormGroup;
+  testForm: FormGroup;
 
   commonAttributesForms = {
     FunctionalGroup: 'function_group_id',
@@ -41,6 +42,14 @@ export class ProvisioningComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.testForm = this.fb.group({
+      business_role_id: ['a'],
+      channel_id: ['', Validators.required],
+      job_duty_id: ['', Validators.required],
+      team_id: ['', Validators.required]
+    });
+    return;
     this.buildForms();
 
     if (!this.isStaticData) {
