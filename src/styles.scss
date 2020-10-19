@@ -1,1 +1,31 @@
 /* You can add global styles to this file, and also import other style files */
+
+.table-list {
+    padding:.5rem;
+    background-color:#fff;
+    border-radius: .25rem;
+
+    &__buttons{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: .5rem 0;
+    }
+
+    &__actions{
+        display:flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: .5rem;
+        color: blue;
+        font-size: .8rem;
+        
+        a{
+            cursor: pointer;
+            
+            &:hover{
+                text-decoration:underline !important;
+            }
+        }
+    }
+}
