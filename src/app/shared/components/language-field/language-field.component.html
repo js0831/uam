@@ -4,7 +4,7 @@
             [ngClass]="{'is-invalid': isInvalid('language')}"
             class="form-control form-control-sm" formControlName="language">
             <ng-container *ngFor="let lang of languages">
-                <option [value]="lang.id" *ngIf="!isLanguageAdded(lang.id)">{{lang.name}}</option>
+                <option [value]="lang.id" *ngIf="!isLanguageAdded(lang.id)">{{lang.langCode}}</option>
             </ng-container>
         </select>
         

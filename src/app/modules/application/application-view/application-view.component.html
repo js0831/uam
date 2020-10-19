@@ -1,8 +1,8 @@
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
+    <ol class="breadcrumb"> 
         <li class="breadcrumb-item">
-            <a [routerLink]="['/application/']"
-        >Application</a></li>
+            <a [routerLink]="['/application']">Application</a>
+        </li>
         <li class="breadcrumb-item active" aria-current="page">SVC</li>
     </ol>
 </nav>
@@ -10,12 +10,18 @@
 
 <div class="section application">
     <div class="form-group form-group-sm">
-        <label>System ID</label>
-        <input type="text" class="form-control form-control-sm" readonly>
+        <label>
+            System ID:
+            <strong>SVC</strong>
+        </label>
+        <!-- <input type="text" class="form-control form-control-sm" readonly> -->
     </div>
     <div class="form-group">
-        <label>Description</label>
-        <textarea class="form-control form-control-sm" rows="3" readonly></textarea>
+        <label>
+            Description
+            <strong>Single View Customer</strong>
+        </label>
+        <!-- <textarea class="form-control form-control-sm" rows="3" readonly></textarea> -->
     </div>  
 </div>
 
@@ -89,7 +95,7 @@
         <div class="fform__column">
             <div class="form-group">
                 <label>Title</label>
-                <app-language-field></app-language-field> 
+                <app-language-field *ngIf="showModal" [form]="form"></app-language-field> 
                 <!-- <input 
                   formControlName="title" type="text" class="form-control form-control-sm" 
                   [ngClass]="{'is-invalid': form.controls.title.invalid && form.controls.title.touched}"> -->
@@ -110,7 +116,7 @@
         <div class="form-group flex-2" >
           <label>Description</label>
           <!-- <input type="text" class="form-control form-control-sm"> -->
-          <app-language-field></app-language-field> 
+          <app-language-field [form]="optionsForm"></app-language-field> 
         </div>
         <div class="form-group">
             <label>value</label>

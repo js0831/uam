@@ -23,7 +23,7 @@
                 <td>{{app.systemId}} </td>
                 <td>{{app.translations | itranslate}}</td>
                 <td class="table-list__actions">
-                    <a [routerLink]="['/application/1']">view</a> | 
+                    <a [routerLink]="['/application', app.systemId]">view</a> | 
                     <a (click)="showAppForm('edit', app)">edit</a> | 
                     <a (click)="delete(app)">delete</a>
                 </td>

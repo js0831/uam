@@ -1,5 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from 'src/environments/environment';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-language-field',
@@ -14,16 +16,17 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
   languages = [
     {
       id: 1,
-      name: 'en'
+      langCode: 'en'
     },
     {
       id: 2,
-      name: 'zh_HK'
+      langCode: 'zh_HK'
     }
   ];
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private api: ApiService
   ) { }
 
   ngOnInit(): void {
@@ -32,6 +35,15 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
       value: ['', Validators.required]
     });
     this.form.addControl('translations', this.fb.array([], Validators.required));
+
+    if (environment.staticData){
+      return;
+    }
+
+    this.languages = [];
+    this.api.list('language/getAllLanguage').subscribe( x => {
+      this.languages = x.languages;
+    });
   }
 
   ngOnDestroy(): void {
@@ -69,7 +81,7 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
 
   getLanguageName(id): string{
     const found = this.languages.filter(x => x.id.toString() === id);
-    return found.length > 0 ? found[0].name : '';
+    return found.length > 0 ? found[0].langCode : '';
   }
 
   delete(index): void{

@@ -17,6 +17,7 @@ export class ApplicationViewComponent implements OnInit {
 
   public modalTitle: string;
   public form: FormGroup;
+  public optionsForm: FormGroup;
   public showModal = false;
 
   // TEMP
@@ -36,6 +37,7 @@ constructor(
       title: ['', [Validators.required]],
       type: ['', [Validators.required]],
     });
+    this.optionsForm = this.formBuilder.group({});
   }
 
 
