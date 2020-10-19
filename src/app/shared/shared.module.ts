@@ -2,20 +2,24 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from './components/modal/modal.component';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { LanguageFieldComponent } from './components/language-field/language-field.component';
 
 @NgModule({
   declarations: [
-    ModalComponent
+    ModalComponent,
+    LanguageFieldComponent
   ],
   exports: [
-    ModalComponent
+    ModalComponent,
+    LanguageFieldComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule
   ]
 })

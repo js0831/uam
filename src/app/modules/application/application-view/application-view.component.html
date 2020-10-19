@@ -1,0 +1,162 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a [routerLink]="['/application/']"
+        >Application</a></li>
+        <li class="breadcrumb-item active" aria-current="page">SVC</li>
+    </ol>
+</nav>
+
+
+<div class="section application">
+    <div class="form-group form-group-sm">
+        <label>System ID</label>
+        <input type="text" class="form-control form-control-sm" readonly>
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control form-control-sm" rows="3" readonly></textarea>
+    </div>  
+</div>
+
+<div class="table-list">
+
+    <div class="table-list__buttons">
+        <label>Attributes</label>
+        <button type="button" class="btn btn-sm btn-primary" (click)="showAppForm('add')">Add New Attribute</button>
+    </div>
+
+    <table class="table table-sm">
+        <thead>
+            <tr> 
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Type</th>                
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td>channelId</td>
+                <td>Channel ID</td>
+                <td>Number</td>
+                <td class="table-list__actions">
+                    <a>view</a> |<a>edit</a> | <a>delete</a>
+                </td>
+            </tr> 
+        </tbody>
+    </table>
+</div>
+
+
+<app-modal
+    class="large"
+    [show]="showModal"
+    [saveBtn]="'Save'"
+    [closeBtn]="'Cancel'"
+    [title]="modalTitle"
+    (close)="closeModal()"
+    (submit)="submitForm()"
+>
+    <ul class="nav nav-tabs" *ngIf="activeTab !== 'options'">
+        <li class="nav-item">
+            <a class="nav-link active">Details</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" (click)="activeTab='options'">Options</a>
+        </li>
+    </ul>
+    <form [formGroup]="form" class="fform" *ngIf="activeTab !== 'options'">
+        <div class="fform__column">
+            <div class="form-group">
+                <label>ID</label> 
+                <input 
+                  formControlName="id" type="text" class="form-control form-control-sm" 
+                  [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}">
+            </div>
+            <div class="form-group">
+                <label>Type</label> 
+                <select 
+                    [ngClass]="{'is-invalid': form.controls.type.invalid && form.controls.type.touched}"
+                    formControlName="type" class="form-control form-control-sm">
+                    <option></option>
+                    <option>String</option>
+                    <option>Numeric</option>
+                    <option>Boolean</option>
+                </select>
+            </div>
+        </div>
+        <div class="fform__column">
+            <div class="form-group">
+                <label>Title</label>
+                <app-language-field></app-language-field> 
+                <!-- <input 
+                  formControlName="title" type="text" class="form-control form-control-sm" 
+                  [ngClass]="{'is-invalid': form.controls.title.invalid && form.controls.title.touched}"> -->
+            </div>
+        </div>
+    </form>
+
+    <ul class="nav nav-tabs" *ngIf="activeTab === 'options'">
+        <li class="nav-item">
+            <a class="nav-link" (click)="activeTab='details'">Details</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active">Options</a>
+          </li>
+    </ul>
+
+    <form class="fform fform--inline optionsForm" *ngIf="activeTab === 'options'">
+        <div class="form-group flex-2" >
+          <label>Description</label>
+          <!-- <input type="text" class="form-control form-control-sm"> -->
+          <app-language-field></app-language-field> 
+        </div>
+        <div class="form-group">
+            <label>value</label>
+            <input type="text" class="form-control form-control-sm">
+        </div>
+        <button type="button" class="btn btn-sm  btn-primary">Add</button>
+    </form>
+
+    
+    <div class="table-list optionsList" *ngIf="activeTab === 'options'">  
+        <table class="table table-sm">
+            <thead>
+                <tr> 
+                    <th scope="col">Description</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Default</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr> 
+                    <td>A</td>
+                    <td>1</td>
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" > 
+                        </div>
+                    </td>
+                    <td class="table-list__actions">
+                        <a>delete</a>
+                    </td>
+                </tr>
+                <tr> 
+                    <td>B</td>
+                    <td>2</td>
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" > 
+                        </div>
+                    </td>
+                    <td class="table-list__actions">
+                        <a>delete</a>
+                    </td>
+                </tr> 
+            </tbody>
+        </table>
+    </div>
+     
+</app-modal>

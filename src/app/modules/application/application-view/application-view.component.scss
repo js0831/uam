@@ -1,0 +1,18 @@
+.application{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: .5rem;
+
+    > div{
+        flex:1;
+    }
+}
+
+.optionsForm{
+    padding: 1rem .25rem;
+}
+
+.optionsList{
+    padding:0;
+}

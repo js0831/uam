@@ -1,0 +1,54 @@
+:host{
+    display: block;
+    padding: .5rem;
+    background: #eee;
+    border-radius: .25rem;
+}
+
+.language{
+
+    &__input{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .25rem;    
+        margin-bottom: .25rem;
+
+        select{
+            width: 10rem;
+        }
+    }
+
+    &__values{
+        font-size: .8rem;
+
+        table{
+            width:100%;
+
+            tr:first-child{
+                font-weight: 500;
+            }
+            td{
+                padding: .25rem;
+
+                &:first-child{
+                    width: 6.25rem;
+                }
+
+                &:last-child{
+                    text-align: right;
+
+                    a{
+                        color:blue;
+                        cursor: pointer;
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+
+            tr{
+                border-bottom: 1px dashed #d2d2d2;
+            }
+        }
+    }
+}

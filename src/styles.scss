@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+.section{
+    padding:.5rem;
+    background-color:#fff;
+    border-radius: .25rem;
+    margin-bottom: .5rem;
+}
 
 .table-list {
     padding:.5rem;
@@ -8,8 +14,15 @@
     &__buttons{
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        padding: .5rem 0;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        gap: .5rem;
+
+        label{
+            padding: 0;
+            margin: 0;
+            font-size: 1.25rem;
+        }
     }
 
     &__actions{
@@ -29,3 +42,46 @@
         }
     }
 }
+
+.large .modal-dialog{
+    width: 45rem;
+    max-width: none;
+}
+
+.large .modal-body{
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.fform{
+    display:flex;
+    width: 100%;
+    gap: .5rem;
+
+    &--inline{
+        align-items: flex-start;
+        .form-group{
+            flex:1;
+            display:flex;
+            gap: .5rem;
+            align-items: flex-start;
+
+            label{
+                margin: 0;
+            }
+        }
+    }
+
+    &__column{
+        flex:1;
+    }
+
+    .form-group{
+        margin-bottom: 0.25rem;
+
+        &.flex-2{
+            flex:2;
+        }
+    }
+}
+
