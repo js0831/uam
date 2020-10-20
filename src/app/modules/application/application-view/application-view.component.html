@@ -3,7 +3,9 @@
         <li class="breadcrumb-item">
             <a [routerLink]="['/application']">Application</a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">SVC</li>
+        <li class="breadcrumb-item active" aria-current="page">
+            {{application.systemId}}
+        </li>
     </ol>
 </nav>
 
@@ -12,14 +14,14 @@
     <div class="form-group form-group-sm">
         <label>
             System ID:
-            <strong>SVC</strong>
+            <strong>{{application.systemId}}</strong>
         </label>
         <!-- <input type="text" class="form-control form-control-sm" readonly> -->
     </div>
     <div class="form-group">
         <label>
-            Description
-            <strong>Single View Customer</strong>
+            Description:
+            <strong>{{application.translations | itranslate}}</strong>
         </label>
         <!-- <textarea class="form-control form-control-sm" rows="3" readonly></textarea> -->
     </div>  
@@ -42,14 +44,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr> 
-                <td>channelId</td>
-                <td>Channel ID</td>
-                <td>Number</td>
-                <td class="table-list__actions">
-                    <a>view</a> |<a>edit</a> | <a>delete</a>
+            <tr *ngFor="let attribute of applicationAttributes"> 
+                <td>
+                    {{attribute.attbId}}
                 </td>
-            </tr> 
+                <td>
+                    {{ attribute.translations | itranslate }}
+                </td>
+                <td>
+                    {{attribute.attbType}}
+                </td>
+                <td class="table-list__actions">
+                    <a>view</a> |<a (click)="showAppForm('edit', attribute)">edit</a> | 
+                    <a (click)="delete(attribute)">delete</a>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -58,7 +67,7 @@
 <app-modal
     class="large"
     [show]="showModal"
-    [saveBtn]="'Save'"
+    [saveBtn]="saveButtonText"
     [closeBtn]="'Cancel'"
     [title]="modalTitle"
     (close)="closeModal()"
@@ -72,89 +81,55 @@
             <a class="nav-link" (click)="activeTab='options'">Options</a>
         </li>
     </ul> -->
-    <form [formGroup]="form" class="fform fform--inline">
-        
-        <div class="form-group">
-            <label>Title: </label>
-            <app-language-field [title]="'Title'" *ngIf="showModal" [form]="form"></app-language-field> 
-        </div>
-        <div class="form-group">
-            <label>ID: </label> 
+    <form [formGroup]="form" class="fform fform--inline">     
+        <div *ngIf="!editId" class="form-check form-check-inline existingAttribute">
             <input 
-                formControlName="id" type="text" class="form-control form-control-sm" 
-                [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}">
-        </div> 
-        <div class="form-group">
-            <label>Type: </label> 
-            <select 
-                [ngClass]="{'is-invalid': form.controls.type.invalid && form.controls.type.touched}"
-                formControlName="type" class="form-control form-control-sm">
-                <option></option>
-                <option>String</option>
-                <option>Numeric</option>
-                <option>Boolean</option>
-            </select>
+                (change)="toggleExistingAttribute()"
+                class="form-check-input" type="checkbox" id="inlineCheckbox1" [checked]="isExistingAttribute">               
+            <label class="form-check-label" for="inlineCheckbox1">Existing Attribute</label>
         </div>
+        <ng-container *ngIf="isExistingAttribute">
+            <div class="form-group">
+                <label>Attribute: </label> 
+                <select 
+                    [ngClass]="{'is-invalid': form.controls.existing.invalid && form.controls.existing.touched}"
+                    formControlName="existing" class="form-control form-control-sm">
+                    <option></option>
+                    <ng-container *ngFor="let attr of allAttributes">
+                        <option *ngIf="!hasAttribute(attr.attbId)" [value]="attr.attbId">{{attr.attbId}}</option>
+                    </ng-container> 
+
+                </select>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="!isExistingAttribute">
+            <div class="form-group">
+                <label>ID: </label> 
+                <input 
+                    formControlName="id" type="text" class="form-control form-control-sm" 
+                    [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}">
+            </div> 
+            <div class="form-group">
+                <label>Type: </label> 
+                <select 
+                    [ngClass]="{'is-invalid': form.controls.type.invalid && form.controls.type.touched}"
+                    formControlName="type" class="form-control form-control-sm">
+                    <option></option>
+                    <option value="string">String</option>
+                    <option value="numeric">Numeric</option>
+                    <option value="boolean">Boolean</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Title: </label>
+                <app-language-field [title]="'Title'" *ngIf="showModal" [form]="form"></app-language-field> 
+            </div>
+        </ng-container>
+        
     </form>
     <br>
 
-    <ul class="nav nav-tabs" >
-        <li class="nav-item">
-            <a class="nav-link active">Options</a>
-          </li>
-    </ul>
-
-    <form class="fform fform--inline optionsForm">
-        <div class="form-group flex-2" >
-          <label>Description:</label>
-          <!-- <input type="text" class="form-control form-control-sm"> -->
-          <app-language-field [title]="'Description'" [form]="optionsForm"></app-language-field> 
-        </div>
-        <div class="form-group">
-            <label>Value: </label>
-            <input type="text" class="form-control form-control-sm">
-        </div>
-        <button type="button" class="btn btn-sm  btn-primary">Add</button>
-    </form>
-
+    <app-application-attribute-options [id]="editId" *ngIf="editId && showModal"></app-application-attribute-options>
     
-    <div class="table-list optionsList" >  
-        <table class="table table-sm">
-            <thead>
-                <tr> 
-                    <th scope="col">Description</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">Default</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr> 
-                    <td>A</td>
-                    <td>1</td>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" > 
-                        </div>
-                    </td>
-                    <td class="table-list__actions">
-                        <a>delete</a>
-                    </td>
-                </tr>
-                <tr> 
-                    <td>B</td>
-                    <td>2</td>
-                    <td>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" > 
-                        </div>
-                    </td>
-                    <td class="table-list__actions">
-                        <a>delete</a>
-                    </td>
-                </tr> 
-            </tbody>
-        </table>
-    </div>
      
 </app-modal>

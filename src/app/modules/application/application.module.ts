@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { ApplicationViewComponent } from './application-view/application-view.component';
 import { TestComponent } from './test/test.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ApplicationAttributeOptionsComponent } from './application-attribute-options/application-attribute-options.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
   declarations: [
     ApplicationComponent,
     ApplicationViewComponent,
-    TestComponent
+    TestComponent,
+    ApplicationAttributeOptionsComponent
   ],
   imports: [
     CommonModule,

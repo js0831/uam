@@ -37,6 +37,7 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
       language: ['', Validators.required],
       value: ['', Validators.required]
     });
+
     this.form.addControl('translations', this.fb.array([], Validators.required));
     this.loadDisplayText();
 
@@ -55,10 +56,16 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
     this.isEdit = false;
   }
 
-  private loadDisplayText(): void{
+  private loadDisplayText(): void {
     setTimeout( xx => {
-      const found = this.translationsFormArray.value.filter( x => x.language === environment.language.toString());
-      this.displayValue = found.length > 0 ? found[0].value : '';
+      const values = this.translationsFormArray.value;
+      if (!values || values.length === 0){
+        this.displayValue = '';
+        return;
+      }
+      const found = values.filter( x => x.language === environment.language.toString());
+      const fallback = found.length === 0 ? values[0].value : found[0].value;
+      this.displayValue = fallback;
     }, 100);
   }
 

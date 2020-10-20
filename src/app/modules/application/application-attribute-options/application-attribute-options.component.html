@@ -1,0 +1,50 @@
+<ul class="nav nav-tabs" >
+    <li class="nav-item">
+        <a class="nav-link active">Options</a>
+      </li>
+</ul>
+<form class="fform fform--inline optionsForm" [formGroup]="form">
+    <div class="form-group flex-2" >
+      <label>Description:</label> 
+      <app-language-field *ngIf="showDescription" [title]="'Description'" [form]="form"></app-language-field> 
+    </div>
+    <div class="form-group">
+        <label>Value: </label>
+        <input type="text" class="form-control form-control-sm" formControlName="value">
+    </div>
+    <button type="button" class="btn btn-sm  btn-primary" (click)="add()">{{editId ? 'Update' : 'Add'}}</button>
+    <button *ngIf="editId" type="button" class="btn btn-sm  btn-secondary" (click)="cancelEdit()">Cancel</button>
+</form>
+
+<div class="table-list optionsList" >  
+    <table class="table table-sm">
+        <thead>
+            <tr> 
+                <th scope="col">Description</th>
+                <th scope="col">Value</th>
+                <th scope="col">Default</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let option of attributeOptions"> 
+                <td>
+                    {{option.translations | itranslate}}
+                </td>
+                <td>
+                    {{option.value}}
+                </td>
+                <td>
+                    <div class="form-check">
+                        <input 
+                            (change)="setDefault(option.id, option.default)"
+                            type="checkbox" class="form-check-input" [checked]="option.default"> 
+                    </div>
+                </td>
+                <td class="table-list__actions">
+                    <a (click)="edit(option)">edit</a> | <a (click)="delete(option.id)">delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>     

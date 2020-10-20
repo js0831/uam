@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { timestamp } from 'rxjs/operators';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
 
 export interface IApplication  {
@@ -18,6 +20,7 @@ export class ApplicationComponent implements OnInit {
 
   public language = environment.language;
   public modalTitle: string;
+  public saveButtonText = 'Save';
   public form: FormGroup;
   public descriptionForm: FormGroup;
   public showModal = false;
@@ -46,13 +49,22 @@ export class ApplicationComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private api: ApiService
+    private api: ApiService,
+    private localdata: LocalDataService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.buildForm();
 
     if (environment.staticData){
+
+      if (!this.localdata.get('applications')){
+        this.localdata.save('applications', this.applications);
+      } else {
+        this.applications = this.localdata.get('applications');
+      }
+
       return;
     }
 
@@ -74,7 +86,10 @@ export class ApplicationComponent implements OnInit {
   showAppForm(type: string, app?: IApplication): void {
     if (type === 'add') {
       this.modalTitle = 'New Application';
+      this.saveButtonText = 'Save';
+      this.editId = null;
     } else {
+      this.saveButtonText = 'Update';
       this.modalTitle = `Edit ${app.systemId}`;
       this.editId = app.systemId;
       this.form.get('systemId').patchValue(app.systemId);
@@ -146,6 +161,7 @@ export class ApplicationComponent implements OnInit {
 
     if (environment.staticData){
       this.updateApplicationList(data.systemId, updateData.translations);
+      this.saveLocalData();
       return;
     }
 
@@ -176,6 +192,7 @@ export class ApplicationComponent implements OnInit {
           };
         })
       });
+      this.saveLocalData();
       this.form.reset();
       return;
     }
@@ -194,11 +211,29 @@ export class ApplicationComponent implements OnInit {
     if (!sure){
       return;
     }
+
+    if (environment.staticData){
+      this.applications = this.applications.filter( x => {
+        return x.systemId !== app.systemId;
+      });
+      this.saveLocalData();
+      return;
+    }
+
     const data = {
       oldSystemId: app.systemId,
       ...app
     };
     await this.api.create('application/deleteApplication', data).toPromise();
     this.applications = this.applications.filter( x => x.systemId !== app.systemId);
+  }
+
+  view(app: IApplication): void{
+    this.localdata.save('application', app);
+    this.router.navigate(['application', app.systemId]);
+  }
+
+  private saveLocalData(): void{
+    this.localdata.save('applications', this.applications);
   }
 }

@@ -9,10 +9,15 @@
     }
 }
 
-.optionsForm{
-    padding: 1rem .25rem;
-}
 
-.optionsList{
-    padding:0;
+.existingAttribute{
+    border-right: 1px solid #ddd;
+    padding-right: 1rem;
+
+    label{
+        -moz-user-select: none; 
+        -ms-user-select: none; 
+            user-select: none;
+            cursor:pointer;
+    }
 }

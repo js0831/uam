@@ -23,7 +23,7 @@
                 <td>{{app.systemId}} </td>
                 <td>{{app.translations | itranslate}}</td>
                 <td class="table-list__actions">
-                    <a [routerLink]="['/application', app.systemId]">view</a> | 
+                    <a (click)="view(app)">view</a> | 
                     <a (click)="showAppForm('edit', app)">edit</a> | 
                     <a (click)="delete(app)">delete</a>
                 </td>
@@ -35,7 +35,7 @@
 
 <app-modal
     [show]="showModal"
-    [saveBtn]="'Save'"
+    [saveBtn]="saveButtonText"
     [closeBtn]="'Cancel'"
     [title]="modalTitle"
     (close)="closeModal()"

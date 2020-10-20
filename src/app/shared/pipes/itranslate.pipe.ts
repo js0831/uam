@@ -7,11 +7,11 @@ import { environment } from '../../../environments/environment';
 export class ItranslatePipe implements PipeTransform {
 
   transform(values: any[], ...args: any[]): string {
-    if (!values){
+    if (!values || values.length === 0){
       return '';
     }
     const found = values.filter( x => x.langId === environment.language);
-    console.log(values);
-    return found.length > 0 ? found[0].value : '';
+    const fallback = found.length === 0 ? values[0].value : found[0].value;
+    return fallback;
   }
 }
