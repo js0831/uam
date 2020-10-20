@@ -12,7 +12,6 @@ const routes: Routes = [
   {
     path: '',
     component: ApplicationComponent
-    // component: TestComponent
   },
   {
     path: ':id',

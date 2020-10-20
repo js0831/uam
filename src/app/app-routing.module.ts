@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProvisioningComponent } from './provisioning/provisioning.component';
 
 const routes: Routes = [
+  {
+    path: '',
+    loadChildren: () => import('./modules/provisioning/provisioning.module').then(m => m.ProvisioningModule)
+  },
   {
     path: 'application',
     loadChildren: () => import('./modules/application/application.module').then(m => m.ApplicationModule)
   },
-  {
-    path: '',
-    component: ProvisioningComponent
-  }
 ];
 
 @NgModule({

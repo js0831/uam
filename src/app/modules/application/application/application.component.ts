@@ -230,7 +230,9 @@ export class ApplicationComponent implements OnInit {
 
   view(app: IApplication): void{
     this.localdata.save('application', app);
-    this.router.navigate(['application', app.systemId]);
+    setTimeout( x => {
+      this.router.navigate(['application', app.systemId]);
+    }, 250);
   }
 
   private saveLocalData(): void{

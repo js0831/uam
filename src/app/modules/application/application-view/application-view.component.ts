@@ -61,6 +61,9 @@ constructor(
 
   getAllAttributes(): any{
     const values = this.localdata.get('applicationAttributes');
+    if (!values){
+      return;
+    }
     Object.values(values).forEach((attrs: any) => {
       this.allAttributes = [
         ...this.allAttributes,

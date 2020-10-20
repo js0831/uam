@@ -58,7 +58,8 @@
         <select class="form-control form-control-sm" formControlName="application">
             <option></option>
             <ng-container *ngFor="let app of applications">
-                <option *ngIf="!isAppAlreadySelected(app.id)" [value]="app.id" >{{app.name}}</option>
+                <!-- *ngIf="!isAppAlreadySelected(app.systemId)" -->
+                <option [value]="app.systemId" >{{app.systemId}}</option>
             </ng-container>
             
         </select>
@@ -67,7 +68,7 @@
 </form>
 
 <div [formGroup]="levelTwoForm" class="level-two" >
-    <div formArrayName="applications">
+    <!-- <div formArrayName="applications">
         <div class="card" *ngFor="let app of selectedApplications; let i=index" [formGroupName]="i">
             <input type="hidden" formControlName="app_id"> 
             
@@ -87,6 +88,33 @@
                     </div>
             </div>
 
+        </div>
+    </div> -->
+    <div>
+        <div class="card" *ngFor="let app of selectedApplications; let i=index">
+            <div class="card-header">
+                {{app.appId}}
+
+                <button type="button" class="btn btn-link" (click)="removeApplication(app.id)">remove</button>
+            </div>
+            <div class="card-body">
+                <div class="form-group" *ngFor="let attr of app.attributes">
+                    <label> {{attr.translations | itranslate}}</label> 
+
+                    <select class="form-control form-control-sm" *ngIf="getOptions(attr.attbId).length > 0;else inputField">
+                        <option></option>
+                        <option 
+                            [selected]="option.default"
+                            [value]="option.value" *ngFor="let option of getOptions(attr.attbId)">
+                            {{option.translations | itranslate}}
+                        </option>
+                    </select>
+                    <ng-template #inputField>
+                        <input type="text" class="form-control form-control-sm" >
+                    </ng-template>
+
+                </div>
+            </div>
         </div>
     </div>
 </div>

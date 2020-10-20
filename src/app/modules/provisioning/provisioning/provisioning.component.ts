@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { ApiService } from '../shared/services/api.service';
-import { STATIC_DATA } from '../shared/data/static.data';
+import { ApiService } from '../../../shared/services/api.service';
+import { STATIC_DATA } from '../../../shared/data/static.data';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LocalDataService } from 'src/app/shared/services/local-data.service';
 
 @Component({
   selector: 'app-provisioning',
@@ -19,8 +20,10 @@ export class ProvisioningComponent implements OnInit {
     businessRoles: STATIC_DATA.businessRoles,
     teams: STATIC_DATA.teams,
   };
+  applications = [];
+  applicationAttributes = [];
+  attributeOptions = [];
 
-  applications = STATIC_DATA.applications;
   selectedApplications = [];
   selectedRoles = [];
 
@@ -38,7 +41,8 @@ export class ProvisioningComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private localdata: LocalDataService
   ) { }
 
   ngOnInit(): void {
@@ -49,14 +53,27 @@ export class ProvisioningComponent implements OnInit {
       job_duty_id: ['', Validators.required],
       team_id: ['', Validators.required]
     });
-    return;
+
     this.buildForms();
+
+    if (this.isStaticData) {
+      this.applications = this.localdata.get('applications');
+      this.applicationAttributes = this.localdata.get('applicationAttributes') || [];
+      this.attributeOptions = this.localdata.get('attributeOptions') || [];
+      console.log(this.attributeOptions);
+    }
 
     if (!this.isStaticData) {
       this.resetData();
       this.loadFirstLevelData();
       this.getApplications();
     }
+  }
+
+  getOptions(id): any {
+    const format = id.replace(/\ /g, '_').toLowerCase();
+    const options = this.attributeOptions['attr-opts-' + format];
+    return options || [];
   }
 
   private buildForms(): void {
@@ -97,19 +114,29 @@ export class ProvisioningComponent implements OnInit {
     if (this.applicationForm.invalid) {
       return;
     }
+
     const appId = this.applicationForm.value.application;
-    let app = this.applications.filter( x =>  x.id.toString() === appId)[0] as any;
+    const format = appId.replace(/\ /g, '_').toLowerCase();
+    const attributes = this.applicationAttributes['app-attr-' + format];
 
-    const attributes = await this.getApplicationAttributes(appId);
-    const attributeDefaultValues: any = await this.getApplicationAttributeDefaults(appId);
-    this.buildApplicationsFormArray(appId, attributeDefaultValues.defaultAppConfigs[0]);
-
-    app = {
-      ...app,
+    this.selectedApplications.push({
+      id: new Date().getTime(),
+      appId,
       attributes
-    };
-    this.selectedApplications.push(app);
+    });
     this.applicationForm.reset();
+
+    // let app = this.applications.filter( x =>  x.id.toString() === appId)[0] as any;
+    // const attributes = await this.getApplicationAttributes(appId);
+    // const attributeDefaultValues: any = await this.getApplicationAttributeDefaults(appId);
+    // this.buildApplicationsFormArray(appId, attributeDefaultValues.defaultAppConfigs[0]);
+
+    // app = {
+    //   ...app,
+    //   attributes
+    // };
+    // this.selectedApplications.push(app);
+    // this.applicationForm.reset();
     return;
   }
 
@@ -188,11 +215,14 @@ export class ProvisioningComponent implements OnInit {
     return this.selectedApplications.filter( x => x.id === id).length > 0;
   }
 
-  removeApplication(id, index): void {
-    this.selectedApplications = this.selectedApplications.filter( x =>  x.id !== id);
-    this.applicationsFormArray.removeAt(index);
+  // removeApplication(id, index): void {
+  //   this.selectedApplications = this.selectedApplications.filter( x =>  x.id !== id);
+  //   this.applicationsFormArray.removeAt(index);
 
-    console.log(this.levelTwoForm.value);
+  //   console.log(this.levelTwoForm.value);
+  // }
+  removeApplication(id): void {
+    this.selectedApplications = this.selectedApplications.filter( x =>  x.id !== id);
   }
 
   private resetData(): void{

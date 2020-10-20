@@ -3,15 +3,13 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProvisioningComponent } from './provisioning/provisioning.component';
 import { HttpClientModule } from '@angular/common/http';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { JkWaitModule } from 'jk-wait';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProvisioningComponent
   ],
   imports: [
     BrowserModule,
