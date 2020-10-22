@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { JkWaitService } from 'jk-wait';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
@@ -25,6 +27,7 @@ export class ApplicationViewComponent implements OnInit {
   public saveButtonText: string;
   public editId: string;
   public form: FormGroup;
+  public applicationForm: FormGroup;
   public showModal = false;
   public isExistingAttribute = false;
   public allAttributes = [];
@@ -36,12 +39,16 @@ constructor(
     private formBuilder: FormBuilder,
     private localdata: LocalDataService,
     private api: ApiService,
+    private router: Router,
+    private wait: JkWaitService
   ) { }
 
   ngOnInit(): void {
-    this.buildForm();
-
     this.application = this.localdata.get('application');
+    this.buildForm();
+    setTimeout( x => {
+      this.appendCurrentTranslations(this.applicationForm, this.application.translations);
+    }, 0);
 
     if (environment.staticData){
       const values = this.localdata.get('applicationAttributes');
@@ -115,6 +122,9 @@ constructor(
       type: ['', [Validators.required]],
       existing: ['', []],
     });
+    this.applicationForm = this.formBuilder.group({
+      systemId: [this.application.systemId, [Validators.required]]
+    });
   }
 
 
@@ -130,20 +140,20 @@ constructor(
       this.form.get('id').patchValue(app.attbId);
       this.form.get('type').patchValue(app.attbType);
       setTimeout( x => {
-        this.appendCurrentTranslations(app.translations);
+        this.appendCurrentTranslations(this.form, app.translations);
       }, 0);
     }
 
     this.showModal = true;
   }
 
-  private appendCurrentTranslations(translations: any[]): void{
+  private appendCurrentTranslations(form, translations: any[]): void{
     translations.forEach( x => {
       const group = this.formBuilder.group({
         language: [x.langId.toString(), Validators.required],
         value: [x.value, Validators.required]
       });
-      (this.form.get('translations') as FormArray).push(group);
+      (form.get('translations') as FormArray).push(group);
     });
   }
 
@@ -251,4 +261,50 @@ constructor(
     this.applicationAttributes = this.applicationAttributes.filter( x => app.attbId !== x.attbId);
   }
 
+
+  update(): void {
+    const formValue = this.applicationForm.value;
+    const translations = formValue.translations.map( x => {
+      return {
+        keyVal: formValue.systemId,
+        langId: Number(x.language),
+        value: x.value
+      };
+    });
+    // const updateData = {
+    //   oldSystemId: this.application.systemId,
+    //   systemDescription: formValue.systemId,
+    //   systemId: formValue.systemId,
+    //   translations,
+    // };
+
+    this.localdata.save('application' , {
+      systemId: formValue.systemId,
+      systemDescription: formValue.systemId,
+      translations,
+    });
+
+    const apps = this.localdata.get('applications').map( x => {
+      if (x.systemId === this.application.systemId) {
+        x.systemId = formValue.systemId;
+        x.systemDescription = formValue.systemId;
+        x.translations = translations;
+      }
+      return x;
+    });
+    this.localdata.save('applications' , apps);
+
+    this.wait.start();
+
+    setTimeout( x => {
+      alert('Success');
+      this.wait.end();
+    }, 500);
+
+  }
+
+
+  cancel(): void{
+    this.router.navigate(['application']);
+  }
 }

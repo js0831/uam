@@ -23,8 +23,9 @@
                 <td>{{app.systemId}} </td>
                 <td>{{app.translations | itranslate}}</td>
                 <td class="table-list__actions">
-                    <a (click)="view(app)">view</a> | 
-                    <a (click)="showAppForm('edit', app)">edit</a> | 
+                    <!-- <a (click)="view(app)">view</a> | 
+                    <a (click)="showAppForm('edit', app)">edit</a> |  -->
+                    <a (click)="view(app)">edit</a>
                     <a (click)="delete(app)">delete</a>
                 </td>
             </tr> 
