@@ -225,6 +225,24 @@ constructor(
   updateAttribute(data, oldId): void {
 
     if (environment.staticData) {
+
+      // update options id if id changed
+      if (oldId !== data.attbId) {
+          let allOptions = this.localdata.get('attributeOptions');
+          if (Object.keys(allOptions).length > 0) {
+            const attrId = oldId.replace(/\ /g, '_').toLowerCase();
+            const atributeOptions = allOptions['attr-opts-' + attrId];
+            delete allOptions['attr-opts-' + attrId];
+            const newAttrId = data.attbId.replace(/\ /g, '_').toLowerCase();
+            allOptions = {
+              ...allOptions,
+              ['attr-opts-' + newAttrId] : atributeOptions
+            };
+            this.localdata.save('attributeOptions', allOptions);
+          }
+      }
+
+
       this.applicationAttributes = this.applicationAttributes.filter( x => x.attbId !== oldId);
       this.applicationAttributes.push(data);
       this.saveLocalData();
@@ -278,6 +296,22 @@ constructor(
     //   translations,
     // };
 
+    // update application attributes id if id changed
+    if (this.application.systemId !== formValue.systemId) {
+      let allAttributes = this.localdata.get('applicationAttributes');
+      if (Object.keys(allAttributes).length > 0) {
+        const appId = this.application.systemId.replace(/\ /g, '_').toLowerCase();
+        const appAtribute = allAttributes['app-attr-' + appId];
+        delete allAttributes['app-attr-' + appId];
+        const newAppId = formValue.systemId.replace(/\ /g, '_').toLowerCase();
+        allAttributes = {
+          ...allAttributes,
+          ['app-attr-' + newAppId] : appAtribute
+        };
+        this.localdata.save('applicationAttributes', allAttributes);
+      }
+    }
+
     this.localdata.save('application' , {
       systemId: formValue.systemId,
       systemDescription: formValue.systemId,
@@ -295,7 +329,6 @@ constructor(
     this.localdata.save('applications' , apps);
 
     this.wait.start();
-
     setTimeout( x => {
       alert('Success');
       this.wait.end();
