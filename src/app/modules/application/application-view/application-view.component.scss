@@ -1,11 +1,23 @@
 .application{
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: .5rem;
 
     > div{
         flex:1;
+        display: flex;
+        align-items: center;
+
+        &:first-child{
+            label{
+                width: 105px;
+            }
+        }
+
+        &:last-child{
+            flex: none;
+        }
     }
 }
 

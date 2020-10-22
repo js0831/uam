@@ -10,28 +10,33 @@
 </nav>
 
 
-<div class="section application">
+<form [formGroup]="applicationForm" class="section application fform fform--inline">
     <div class="form-group form-group-sm">
         <label>
             System ID:
-            <strong>{{application.systemId}}</strong>
+            <!-- <strong>{{application.systemId}}</strong> -->
         </label>
-        <!-- <input type="text" class="form-control form-control-sm" readonly> -->
+        <input type="text" class="form-control form-control-sm" formControlName="systemId">
     </div>
     <div class="form-group">
         <label>
             Description:
-            <strong>{{application.translations | itranslate}}</strong>
+            <app-language-field [title]="'Description'" [form]="applicationForm"></app-language-field> 
+            <!-- <strong>{{application.translations | itranslate}}</strong> -->
         </label>
         <!-- <textarea class="form-control form-control-sm" rows="3" readonly></textarea> -->
     </div>  
-</div>
+    <div class="form-group">
+        <button class="btn btn-sm btn-primary" (click)="update()">Update</button>
+        <button class="btn btn-sm btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+</form>
 
 <div class="table-list">
 
     <div class="table-list__buttons">
         <label>Attributes</label>
-        <button type="button" class="btn btn-sm btn-primary" (click)="showAppForm('add')">Add New Attribute</button>
+        <button type="button" class="btn btn-sm btn-success" (click)="showAppForm('add')">Add New Attribute</button>
     </div>
 
     <table class="table table-sm">
@@ -55,7 +60,8 @@
                     {{attribute.attbType}}
                 </td>
                 <td class="table-list__actions">
-                    <a>view</a> |<a (click)="showAppForm('edit', attribute)">edit</a> | 
+                    <!-- <a>view</a> | -->
+                    <a (click)="showAppForm('edit', attribute)">edit</a> | 
                     <a (click)="delete(attribute)">delete</a>
                 </td>
             </tr>

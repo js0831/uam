@@ -146,29 +146,29 @@ export class ApplicationComponent implements OnInit {
     };
 
     if (this.modalTitle.includes('Edit')) {
-      await this.updateApplication(data);
+      // await this.updateApplication(data);
       return;
     }
     await this.createApplication(data);
   }
 
 
-  async updateApplication(data): Promise<any>{
-    const updateData = {
-      oldSystemId: this.editId,
-      ...data
-    };
+  // async updateApplication(data): Promise<any>{
+  //   const updateData = {
+  //     oldSystemId: this.editId,
+  //     ...data
+  //   };
 
-    if (environment.staticData){
-      this.updateApplicationList(data.systemId, updateData.translations);
-      this.saveLocalData();
-      return;
-    }
+  //   if (environment.staticData){
+  //     this.updateApplicationList(data.systemId, updateData.translations);
+  //     this.saveLocalData();
+  //     return;
+  //   }
 
-    const updated = await this.api.create('application/updateApplication', updateData).toPromise();
-    this.updateApplicationList(data.systemId, updated.application.translations);
-    this.form.reset();
-  }
+  //   const updated = await this.api.create('application/updateApplication', updateData).toPromise();
+  //   this.updateApplicationList(data.systemId, updated.application.translations);
+  //   this.form.reset();
+  // }
 
   private updateApplicationList(systemId, translations): void{
     this.applications = this.applications.map( x => {
