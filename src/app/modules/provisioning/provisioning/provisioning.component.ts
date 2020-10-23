@@ -134,6 +134,10 @@ export class ProvisioningComponent implements OnInit {
     return app.translations;
   }
 
+  private getApplicationBySystemId(systemId) {
+    return this.applications.filter(item => item.systemId === systemId)[0];
+  }
+
   async addApplication(): Promise<any> {
     if (this.applicationForm.invalid) {
       return;
@@ -146,8 +150,10 @@ export class ProvisioningComponent implements OnInit {
     this.selectedApplications.push({
       id: new Date().getTime(),
       appId,
-      attributes
+      attributes,
+      application: this.getApplicationBySystemId(appId)
     });
+    console.log(this.selectedApplications);
 
     this.toggleRemoveAppIfNotMultiple(appId);
     this.applicationForm.reset();

@@ -95,7 +95,7 @@
     <div>
         <div class="card" *ngFor="let app of selectedApplications; let i=index">
             <div class="card-header">
-                {{app.appId}}
+                {{app.application.translations | itranslate}}
 
                 <button type="button" class="btn btn-link" (click)="removeApplication(app.id)">remove</button>
             </div>
