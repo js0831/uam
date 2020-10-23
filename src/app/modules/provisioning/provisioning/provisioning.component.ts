@@ -4,6 +4,11 @@ import { ApiService } from '../../../shared/services/api.service';
 import { STATIC_DATA } from '../../../shared/data/static.data';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
+import { IApplication } from '../../../shared/interfaces/iapplication';
+
+interface ISelectionApplications extends IApplication {
+  removed: boolean;
+}
 
 @Component({
   selector: 'app-provisioning',
@@ -20,7 +25,7 @@ export class ProvisioningComponent implements OnInit {
     businessRoles: STATIC_DATA.businessRoles,
     teams: STATIC_DATA.teams,
   };
-  applications = [];
+  applications: ISelectionApplications[] = [];
   applicationAttributes = [];
   attributeOptions = [];
 
@@ -110,6 +115,15 @@ export class ProvisioningComponent implements OnInit {
     this.selectedRoles = this.selectedRoles.filter(x => x.id !== id);
   }
 
+  toggleRemoveAppIfNotMultiple(appId: string) {
+    this.applications = this.applications.map(item => {
+      if (item.systemId === appId && !item.allowMultiple) {
+        item.removed = !item.removed;
+      }
+      return item;
+    });
+  }
+
   async addApplication(): Promise<any> {
     if (this.applicationForm.invalid) {
       return;
@@ -124,6 +138,8 @@ export class ProvisioningComponent implements OnInit {
       appId,
       attributes
     });
+
+    this.toggleRemoveAppIfNotMultiple(appId);
     this.applicationForm.reset();
 
     // let app = this.applications.filter( x =>  x.id.toString() === appId)[0] as any;
@@ -222,7 +238,15 @@ export class ProvisioningComponent implements OnInit {
   //   console.log(this.levelTwoForm.value);
   // }
   removeApplication(id): void {
-    this.selectedApplications = this.selectedApplications.filter( x =>  x.id !== id);
+    this.selectedApplications = this.selectedApplications.filter((x) =>  {
+      if (x.id !== id) {
+        return true;
+      }
+      if (!x.allowMultiple) {
+        this.toggleRemoveAppIfNotMultiple(x.appId)
+      }
+      return false;
+    });
   }
 
   private resetData(): void{

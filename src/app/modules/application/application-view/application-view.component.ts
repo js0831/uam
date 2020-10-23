@@ -5,8 +5,7 @@ import { JkWaitService } from 'jk-wait';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
-import { IApplication } from '../application/application.component';
-
+import { IApplication } from '../../../shared/interfaces/iapplication';
 
 export interface IApplicationAttribute  {
   id: string;
@@ -119,7 +118,6 @@ constructor(
       systemId: id
     }).subscribe( x => {
       this.applicationAttributes = x.roleAttr;
-      console.log(x.roleAttr);
     });
   }
 
@@ -130,7 +128,8 @@ constructor(
       existing: ['', []],
     });
     this.applicationForm = this.formBuilder.group({
-      systemId: [this.application.systemId, [Validators.required]]
+      systemId: [this.application.systemId, [Validators.required]],
+      allowMultiple: [this.application.allowMultiple]
     });
   }
 
@@ -340,6 +339,7 @@ constructor(
     this.localdata.save('application' , {
       systemId: formValue.systemId,
       systemDescription: formValue.systemId,
+      allowMultiple: formValue.allowMultiple,
       translations,
     });
 
@@ -347,6 +347,7 @@ constructor(
       if (x.systemId === this.application.systemId) {
         x.systemId = formValue.systemId;
         x.systemDescription = formValue.systemId;
+        x.allowMultiple = formValue.allowMultiple;
         x.translations = translations;
       }
       return x;

@@ -1,15 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { timestamp } from 'rxjs/operators';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
-
-export interface IApplication  {
-  systemId: string;
-  translations?: any[];
-}
+import { IApplication } from '../../../shared/interfaces/iapplication';
 
 @Component({
   selector: 'app-application',
@@ -30,6 +25,7 @@ export class ApplicationComponent implements OnInit {
     {
       systemId: 'SVC',
       systemDescription: 'SVC',
+      allowMultiple: false,
       translations: [
         {
           id: 1,
@@ -80,6 +76,7 @@ export class ApplicationComponent implements OnInit {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       systemId: ['', [Validators.required]],
+      allowMultiple: false
     });
   }
 
@@ -119,7 +116,7 @@ export class ApplicationComponent implements OnInit {
 
   async submitForm(): Promise<any> {
     this.form.markAllAsTouched();
-    const {systemId, translations}: IApplication = this.form.value;
+    const { systemId, translations, allowMultiple }: IApplication = this.form.value;
     if (this.form.invalid) {
       alert('All fields are required');
       return;
@@ -142,7 +139,8 @@ export class ApplicationComponent implements OnInit {
     const data = {
       systemDescription: systemId,
       systemId,
-      translations: descriptions
+      translations: descriptions,
+      allowMultiple
     };
 
     if (this.modalTitle.includes('Edit')) {
@@ -185,6 +183,7 @@ export class ApplicationComponent implements OnInit {
       this.applications.push({
         systemId: data.systemId,
         systemDescription: data.systemId,
+        allowMultiple: data.allowMultiple,
         translations: data.translations.map( x => {
           return {
             id: new Date().getTime(),
