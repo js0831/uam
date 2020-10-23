@@ -31,6 +31,7 @@ export class ApplicationViewComponent implements OnInit {
   public showModal = false;
   public isExistingAttribute = false;
   public allAttributes = [];
+  public applications: IApplication[] = [];
 
   // TEMP
   activeTab = 'details';
@@ -41,7 +42,10 @@ constructor(
     private api: ApiService,
     private router: Router,
     private wait: JkWaitService
-  ) { }
+  ) {
+    // TODO : remove if after api integration
+    this.applications = JSON.parse(localStorage.getItem('localData')).applications;
+  }
 
   ngOnInit(): void {
     this.application = this.localdata.get('application');
