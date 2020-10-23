@@ -7,7 +7,7 @@ export const environment = {
   apiURL: 'http://localhost:4003/uam-api/api/',
   // apiURL: 'https://stale-goose-99.loca.lt/api/',
   staticData: true,
-  language: 1, // 1: en, 2: zh_HK
+  language: 1
 };
 
 /*

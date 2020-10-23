@@ -11,7 +11,7 @@ import { ItranslatePipe } from './pipes/itranslate.pipe';
   declarations: [
     ModalComponent,
     LanguageFieldComponent,
-    ItranslatePipe
+    ItranslatePipe,
   ],
   exports: [
     ModalComponent,

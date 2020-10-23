@@ -124,6 +124,16 @@ export class ProvisioningComponent implements OnInit {
     });
   }
 
+  getAppTranslation(systemId) {
+    let app;
+    this.applications.forEach(item => {
+      if (systemId === item.systemId) {
+        app = item;
+      }
+    });
+    return app.translations;
+  }
+
   async addApplication(): Promise<any> {
     if (this.applicationForm.invalid) {
       return;

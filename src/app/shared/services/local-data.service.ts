@@ -5,10 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class LocalDataService {
 
-  constructor(
-
-  ) { }
-
   save(what: string, data: any): void {
 
     let newData = {
