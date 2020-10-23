@@ -59,7 +59,7 @@
             <option></option>
             <ng-container *ngFor="let app of applications">
                 <!-- *ngIf="!isAppAlreadySelected(app.systemId)" -->
-                <option [value]="app.systemId" >{{app.systemId}}</option>
+                <option [value]="app.systemId" *ngIf="!app.removed" >{{app.systemId}}</option>
             </ng-container>
             
         </select>

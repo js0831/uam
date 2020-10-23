@@ -44,6 +44,12 @@
 >
     <form [formGroup]="form" *ngIf="form">
         <div class="form-group">
+            <label>
+                <input formControlName="allowMultiple" type="checkbox" />
+                Allow multiple
+            </label>
+        </div>
+        <div class="form-group">
             <label>System ID</label> 
             <input 
               formControlName="systemId" type="text" class="form-control" 

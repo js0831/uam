@@ -5,8 +5,7 @@ import { JkWaitService } from 'jk-wait';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
-import { IApplication } from '../application/application.component';
-
+import { IApplication } from '../../../shared/interfaces/iapplication';
 
 export interface IApplicationAttribute  {
   id: string;
