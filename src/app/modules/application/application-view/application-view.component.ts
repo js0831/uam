@@ -24,12 +24,14 @@ export class ApplicationViewComponent implements OnInit {
   public applicationAttributes: any[] = [];
   public modalTitle: string;
   public saveButtonText: string;
-  public editId: string;
+  public editAttribute: any;
   public form: FormGroup;
   public applicationForm: FormGroup;
   public showModal = false;
   public isExistingAttribute = false;
   public allAttributes = [];
+  public dragging: any;
+  public dropping: any;
   public applications: IApplication[] = [];
 
   // TEMP
@@ -94,8 +96,9 @@ constructor(
 
   private saveLocalData(): void {
     const appId = this.application.systemId.replace(/\ /g, '_').toLowerCase();
+    const sortedValues = this.applicationAttributes.sort(this.sortCompare);
     const toSave = {
-      ['app-attr-' + appId]: this.applicationAttributes
+      ['app-attr-' + appId]: sortedValues
     };
     const oldvalues = this.localdata.get('applicationAttributes');
     if (!oldvalues){
@@ -135,9 +138,9 @@ constructor(
     if (type === 'add') {
       this.modalTitle = 'New Attibute';
       this.saveButtonText = 'Save';
-      this.editId = null;
+      this.editAttribute = null;
     } else {
-      this.editId = app.attbId;
+      this.editAttribute = app;
       this.saveButtonText = 'Update';
       this.modalTitle = `Edit ${app.attbId}`;
       this.form.get('id').patchValue(app.attbId);
@@ -205,11 +208,16 @@ constructor(
       })
     };
 
-    if (!this.editId) {
+    if (!this.editAttribute) {
       if (environment.staticData) {
-        this.applicationAttributes.push(data);
+        const order =  this.generateNextOrder();
+        const atributeData = {
+          ...data,
+          order
+        };
+        this.applicationAttributes.push(atributeData);
         this.saveLocalData();
-        this.editId = id;
+        this.editAttribute = atributeData;
         this.modalTitle = 'Edit ' + id;
         this.saveButtonText = 'Update';
         // this.form.reset();
@@ -221,19 +229,19 @@ constructor(
         this.form.reset();
       });
     } else {
-      this.updateAttribute(data, this.editId);
+      this.updateAttribute(data, this.editAttribute);
     }
   }
 
-  updateAttribute(data, oldId): void {
+  updateAttribute(data, editAttribute): void {
 
     if (environment.staticData) {
 
       // update options id if id changed
-      if (oldId !== data.attbId) {
+      if (editAttribute.attbId !== data.attbId) {
           let allOptions = this.localdata.get('attributeOptions');
           if (Object.keys(allOptions).length > 0) {
-            const attrId = oldId.replace(/\ /g, '_').toLowerCase();
+            const attrId = editAttribute.attbId.replace(/\ /g, '_').toLowerCase();
             const atributeOptions = allOptions['attr-opts-' + attrId];
             delete allOptions['attr-opts-' + attrId];
             const newAttrId = data.attbId.replace(/\ /g, '_').toLowerCase();
@@ -246,8 +254,11 @@ constructor(
       }
 
 
-      this.applicationAttributes = this.applicationAttributes.filter( x => x.attbId !== oldId);
-      this.applicationAttributes.push(data);
+      this.applicationAttributes = this.applicationAttributes.filter( x => x.attbId !== editAttribute.attbId);
+      this.applicationAttributes.push({
+        ...data,
+        order: editAttribute.order
+      });
       this.saveLocalData();
       this.form.reset();
       this.showModal = false;
@@ -256,11 +267,21 @@ constructor(
 
     this.api.create('roleattribute/updateRoleAttribute', {
       ...data,
-      oldAttbId: oldId,
+      oldAttbId: editAttribute.attbId,
     }).subscribe( x => {
       this.showModal = false;
       this.form.reset();
     });
+  }
+
+  sortCompare( a, b ): number{
+    if ( a.order < b.order ){
+      return -1;
+    }
+    if ( a.order > b.order ){
+      return 1;
+    }
+    return 0;
   }
 
   async delete(app: any): Promise<any> {
@@ -339,8 +360,59 @@ constructor(
 
   }
 
-
   cancel(): void{
     this.router.navigate(['application']);
+  }
+
+  drag(attribute, event): void {
+    this.dragging = attribute;
+    event.dataTransfer.setData('attr', JSON.stringify(attribute));
+  }
+
+  dragend(): void{
+    this.dragging = null;
+    this.dropping = null;
+  }
+
+  allowDrop(ev, attribute): void{
+    ev.preventDefault();
+    this.dropping = attribute;
+  }
+
+  drop(ev, attribute): void{
+    ev.preventDefault();
+    const data = JSON.parse(ev.dataTransfer.getData('attr'));
+    const newOrder = attribute.order;
+
+    if (newOrder === data.order) {
+      return;
+    }
+
+    this.applicationAttributes = this.applicationAttributes.map( x => {
+      console.log(x.order + ' = ' + data.order + ' - ' + newOrder);
+
+      if (data.order > newOrder) {
+        if (x.order === data.order){
+          x.order = newOrder;
+        } else if (x.order >= newOrder && x.order <= data.order) {
+          x.order = x.order + 1;
+        }
+      } else {
+        if (x.order === data.order){
+          x.order = newOrder;
+        } else if ( x.order <= newOrder && x.order >= data.order) {
+          x.order = x.order - 1;
+        }
+      }
+
+      return x;
+    });
+    this.saveLocalData();
+  }
+
+  generateNextOrder(): number {
+    const keys = Object.keys(this.applicationAttributes);
+    const lastkey = keys[keys.length - 1];
+    return (this.applicationAttributes[lastkey].order) + 1;
   }
 }

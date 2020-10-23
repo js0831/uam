@@ -39,19 +39,35 @@
         <button type="button" class="btn btn-sm btn-success" (click)="showAppForm('add')">Add New Attribute</button>
     </div>
 
-    <table class="table table-sm">
+   
+    <table class="table table-sm draggable">
         <thead>
-            <tr>
+            <tr> 
                 <th scope="col">ID</th>
                 <th scope="col">Title</th>
-                <th scope="col">Type</th>
+                <th scope="col">Type</th>                
                 <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let attribute of applicationAttributes">
+            <!-- 'top' : this.dragging && this.dragging.order > attribute.order,
+            'bottom' : this.dragging && this.dragging.order < attribute.order -->
+
+            <tr 
+                [ngClass]="{
+                    'dragging': this.dragging && this.dragging.attbId === attribute.attbId && this.dragging !== this.dropping,
+                    'dropping': this.dropping && this.dropping.attbId === attribute.attbId && this.dragging !== this.dropping
+                }"
+                (drop)="drop($event, attribute)" 
+                (dragover)="allowDrop($event, attribute)"
+                
+                *ngFor="let attribute of applicationAttributes"> 
                 <td>
-                    {{attribute.attbId}}
+                    
+                    <label class="dragLabel" draggable="true" (dragstart)="drag(attribute, $event)" (dragend)="dragend()">
+                        <img src="./assets/images/drag-icon.svg"/>
+                        {{attribute.attbId}}
+                    </label>
                 </td>
                 <td>
                     {{ attribute.translations | itranslate }}
@@ -81,7 +97,7 @@
         </li>
     </ul> -->
     <form [formGroup]="form" class="fform fform--inline">
-        <div *ngIf="!editId" class="form-check form-check-inline existingAttribute">
+        <div *ngIf="!editAttribute" class="form-check form-check-inline existingAttribute">
             <input (change)="toggleExistingAttribute()" class="form-check-input" type="checkbox" id="inlineCheckbox1"
                 [checked]="isExistingAttribute">
             <label class="form-check-label" for="inlineCheckbox1">Copy Attribute</label>
@@ -134,7 +150,7 @@
     </form>
     <br>
 
-    <app-application-attribute-options [id]="editId" *ngIf="editId && showModal"></app-application-attribute-options>
+    <app-application-attribute-options [id]="editAttribute" *ngIf="editAttribute && showModal"></app-application-attribute-options>
 
 
 </app-modal>
