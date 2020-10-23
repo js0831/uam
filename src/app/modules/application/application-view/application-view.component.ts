@@ -118,7 +118,6 @@ constructor(
       systemId: id
     }).subscribe( x => {
       this.applicationAttributes = x.roleAttr;
-      console.log(x.roleAttr);
     });
   }
 
@@ -129,7 +128,8 @@ constructor(
       existing: ['', []],
     });
     this.applicationForm = this.formBuilder.group({
-      systemId: [this.application.systemId, [Validators.required]]
+      systemId: [this.application.systemId, [Validators.required]],
+      allowMultiple: [this.application.allowMultiple]
     });
   }
 
@@ -339,6 +339,7 @@ constructor(
     this.localdata.save('application' , {
       systemId: formValue.systemId,
       systemDescription: formValue.systemId,
+      allowMultiple: formValue.allowMultiple,
       translations,
     });
 
@@ -346,6 +347,7 @@ constructor(
       if (x.systemId === this.application.systemId) {
         x.systemId = formValue.systemId;
         x.systemDescription = formValue.systemId;
+        x.allowMultiple = formValue.allowMultiple;
         x.translations = translations;
       }
       return x;
