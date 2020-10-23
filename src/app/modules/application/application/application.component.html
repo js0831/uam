@@ -15,6 +15,7 @@
             <tr> 
                 <th scope="col">System ID</th>
                 <th scope="col">Description</th>
+                <th scope="col">Allow Multiple</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
             <tr *ngFor="let app of applications"> 
                 <td>{{app.systemId}} </td>
                 <td>{{app.translations | itranslate}}</td>
+                <td>{{app.allowMultiple ? 'Yes' : 'No'}}</td>
                 <td class="table-list__actions">
                     <!-- <a (click)="view(app)">view</a> | 
                     <a (click)="showAppForm('edit', app)">edit</a> |  -->
