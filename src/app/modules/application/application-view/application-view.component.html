@@ -1,7 +1,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a [routerLink]="['/application']">Application</a>
+            <a [routerLink]="['/application']">Application Maintenance</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">
             {{application.systemId}}
@@ -150,7 +150,7 @@
     </form>
     <br>
 
-    <app-application-attribute-options [id]="editAttribute" *ngIf="editAttribute && showModal"></app-application-attribute-options>
+    <app-application-attribute-options [id]="editAttribute.attbId" *ngIf="editAttribute && showModal"></app-application-attribute-options>
 
 
 </app-modal>
