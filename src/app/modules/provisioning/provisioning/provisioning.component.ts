@@ -5,6 +5,7 @@ import { STATIC_DATA } from '../../../shared/data/static.data';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { IApplication } from '../../../shared/interfaces/iapplication';
+import { IMultipleSelectionTag } from '../../../shared/interfaces/i-multiple-selection-tag';
 
 interface ISelectionApplications extends IApplication {
   removed: boolean;
@@ -36,6 +37,9 @@ export class ProvisioningComponent implements OnInit {
   levelOneForm: FormGroup;
   levelTwoForm: FormGroup;
   testForm: FormGroup;
+
+  multipleSelectionBusinessRoles: IMultipleSelectionTag[];
+  selectedBusinessRoles: IMultipleSelectionTag[];
 
   commonAttributesForms = {
     FunctionalGroup: 'function_group_id',
@@ -73,6 +77,13 @@ export class ProvisioningComponent implements OnInit {
       this.loadFirstLevelData();
       this.getApplications();
     }
+
+    this.multipleSelectionBusinessRoles = this.firstLeveldata.businessRoles.map(item => {
+      return {
+        id: item.id,
+        text: item.name
+      };
+    });
   }
 
   getOptions(id): any {
@@ -320,7 +331,6 @@ export class ProvisioningComponent implements OnInit {
       ]
     };
 
-    console.log(data);
     this.api.create('preset', data).subscribe( x => {
       this.levelOneForm.reset();
       this.levelTwoForm.reset();
@@ -331,4 +341,16 @@ export class ProvisioningComponent implements OnInit {
   // getAttributeOptions(attrID): any {
   //   return STATIC_DATA.attributes.filter ( x => x.id === attrID)[0];
   // }
+
+  onSelectionChange(selectedList: IMultipleSelectionTag[]) {
+    const businessRoleObject = {};
+    this.selectedRoles = [];
+    this.selectedBusinessRoles = selectedList;
+    this.firstLeveldata.businessRoles.forEach(item => {
+      businessRoleObject[item.id] = item;
+    });
+    selectedList.forEach(item => {
+      this.selectedRoles.push(businessRoleObject[item.id]);
+    });
+  }
 }

@@ -1,0 +1,9 @@
+<div (click)="input.focus();showSelection($event)" class="form-control form-control-sm">
+    <ul class="tags-list">
+        <li *ngFor="let tag of tags">{{tag.text}} <span (click)="removeTag(tag.id)" class="close-btn">×</span></li>
+    </ul>
+    <span class="hidden-input-box" #input contenteditable (keydown)="deleteInInputBox($event)"></span>
+    <ul *ngIf="isSelectionVisible" class="selection-dropdown dropdown-menu show">
+        <li (click)="clickSelectionItem(item)" *ngFor="let item of selection" [ngClass]="{active: item.active}" class="dropdown-item">{{item.text}}</li>
+    </ul>
+</div>
