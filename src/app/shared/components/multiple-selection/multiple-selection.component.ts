@@ -11,8 +11,8 @@ export class MultipleSelectionComponent implements OnInit, OnDestroy {
   @Input() selection: IMultipleSelectionTag[] = [];
   @Output() onSelectionChange: EventEmitter<IMultipleSelectionTag[]> = new EventEmitter<IMultipleSelectionTag[]>();
 
-  tags: IMultipleSelectionTag[] = [];
-  isSelectionVisible: boolean = false;
+  public tags: IMultipleSelectionTag[] = [];
+  public isSelectionVisible: boolean = false;
 
   ngOnInit(): void {
     this.hideSelection = this.hideSelection.bind(this);
