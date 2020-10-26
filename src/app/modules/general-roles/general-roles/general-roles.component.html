@@ -1,0 +1,85 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">General Role Maintenance</li>
+    </ol>
+</nav>
+
+
+<div class="table-list">
+    <table class="table table-sm">
+        <thead>
+            <tr> 
+                <th scope="col">Organization</th>
+                <th scope="col">Channel</th>
+                <th scope="col">Team</th>
+                <th scope="col">Business Job Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="input-fields"> 
+                <th>
+                    <form (submit)="save('organization')">
+                        <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.organization" type="text" class="form-control form-control-sm">
+                        <button class="btn btn-primary btn-sm" (click)="save('organization')">+</button>
+                    </form>
+                </th>
+                <th>
+                    <form (submit)="save('channel')">
+                        <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.channel" type="text" class="form-control form-control-sm">
+                        <button class="btn btn-primary btn-sm" (click)="save('channel')">+</button>
+                    </form>
+                </th>
+                <th>
+                    <form (submit)="save('team')">
+                        <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.team" type="text" class="form-control form-control-sm">
+                        <button class="btn btn-primary btn-sm" (click)="save('team')">+</button>    
+                    </form>
+                </th>
+                <th>
+                    <form (submit)="save('jobrole')">
+                        <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.jobrole" type="text" class="form-control form-control-sm">
+                        <button class="btn btn-primary btn-sm" (click)="save('jobrole')">+</button>
+                    </form>
+                </th>
+            </tr>
+            <tr> 
+                <td>
+                    <ul>
+                        <li *ngFor="let item of list.organization; let i = index">
+                            {{item.name}}
+
+                            <a (click)="delete(i , 'organization')">delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li *ngFor="let item of list.channel; let i = index">
+                            {{item.name}}
+                            
+                            <a (click)="delete(i , 'channel')">delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li *ngFor="let item of list.team; let i = index">
+                            {{item.name}}
+                            
+                            <a (click)="delete(i , 'team')">delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        <li *ngFor="let item of list.jobrole; let i = index">
+                            {{item.name}}
+
+                            <a (click)="delete(i , 'jobrole')">delete</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

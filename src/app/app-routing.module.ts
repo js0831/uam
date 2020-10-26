@@ -10,6 +10,10 @@ const routes: Routes = [
     path: 'application',
     loadChildren: () => import('./modules/application/application.module').then(m => m.ApplicationModule)
   },
+  {
+    path: 'general-roles',
+    loadChildren: () => import('./modules/general-roles/general-roles.module').then(m => m.GeneralRolesModule)
+  },
 ];
 
 @NgModule({

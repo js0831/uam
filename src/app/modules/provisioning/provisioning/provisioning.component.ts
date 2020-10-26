@@ -37,6 +37,7 @@ export class ProvisioningComponent implements OnInit {
   levelOneForm: FormGroup;
   levelTwoForm: FormGroup;
   testForm: FormGroup;
+  generalRoles: any;
 
   multipleSelectionBusinessRoles: IMultipleSelectionTag[];
   selectedBusinessRoles: IMultipleSelectionTag[];
@@ -62,6 +63,20 @@ export class ProvisioningComponent implements OnInit {
       job_duty_id: ['', Validators.required],
       team_id: ['', Validators.required]
     });
+
+    this.generalRoles = this.localdata.get('general-roles') || {
+      organization : [],
+      team : [],
+      channel : [],
+      jobrole : [],
+    };
+    this.firstLeveldata = {
+      jobDuties: this.generalRoles.organization,
+      channels: this.generalRoles.channel,
+      businessRoles: this.generalRoles.jobrole,
+      teams: this.generalRoles.team,
+    };
+    console.log(this.firstLeveldata);
 
     this.buildForms();
 
