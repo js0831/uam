@@ -4,36 +4,6 @@
     </ol>
 </nav>
 
-<div class="table-list">
-    <div class="table-list__buttons">
-        <label></label>
-        <button type="button" class="btn btn-sm btn-primary" (click)="addNewApplication()">Add New Application</button>
-    </div>
-
-    <table class="table table-sm">
-        <thead>
-            <tr> 
-                <th scope="col">System ID</th>
-                <th scope="col">Description</th>
-                <th scope="col">Allow Multiple</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let app of applications"> 
-                <td>{{app.systemId}} </td>
-                <td>{{app.translations | itranslate}}</td>
-                <td>{{app.allowMultiple ? 'Yes' : 'No'}}</td>
-                <td class="table-list__actions">
-                    <!-- <a (click)="view(app)">view</a> | 
-                    <a (click)="showAppForm('edit', app)">edit</a> |  -->
-                    <a (click)="view(app)">edit</a>
-                    <a (click)="delete(app)">delete</a>
-                </td>
-            </tr> 
-        </tbody>
-    </table>
-</div>
-
+<app-application-list></app-application-list>
 
 <app-create-application></app-create-application>

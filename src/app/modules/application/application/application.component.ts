@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
 import { IApplication } from '../../../shared/interfaces/i-application';
-import { EVENTS, EventService } from '../../../shared/services/event.service';
 
 @Component({
   selector: 'app-application',
@@ -15,7 +13,6 @@ import { EVENTS, EventService } from '../../../shared/services/event.service';
 export class ApplicationComponent implements OnInit {
 
   public language = environment.language;
-  public descriptionForm: FormGroup;
   public editId: string;
 
   applications = [
@@ -43,8 +40,7 @@ export class ApplicationComponent implements OnInit {
   constructor(
     private api: ApiService,
     private localDataService: LocalDataService,
-    private router: Router,
-    private eventService: EventService
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -67,10 +63,6 @@ export class ApplicationComponent implements OnInit {
     this.applications = [];
     const list =  await this.api.list('application/getAllApplication').toPromise();
     this.applications = list.lstApplications;
-  }
-
-  addNewApplication(): void {
-    this.eventService.dispatch({ type: EVENTS.SHOW_ADD_APP_MODAL });
   }
 
   // private appendCurrentTranslations(translations: any[]): void{
