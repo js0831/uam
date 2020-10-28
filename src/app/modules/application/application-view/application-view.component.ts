@@ -5,7 +5,7 @@ import { JkWaitService } from 'jk-wait';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
-import { IApplication } from '../../../shared/interfaces/iapplication';
+import { IApplication } from '../../../shared/interfaces/i-application';
 
 export interface IApplicationAttribute  {
   id: string;
@@ -52,7 +52,7 @@ constructor(
     this.application = this.localdata.get('application');
     this.buildForm();
     setTimeout( x => {
-      this.appendCurrentTranslations(this.applicationForm, this.application.translations);
+      this.appendCurrentTranslations(this.applicationForm, this.application.translation);
     }, 0);
 
     if (environment.staticData){
@@ -153,7 +153,7 @@ constructor(
     this.showModal = true;
   }
 
-  private appendCurrentTranslations(form, translations: any[]): void{
+  private appendCurrentTranslations(form, translations: any): void{
     translations.forEach( x => {
       const group = this.formBuilder.group({
         language: [x.langId.toString(), Validators.required],

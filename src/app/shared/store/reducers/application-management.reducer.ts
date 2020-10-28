@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { IApplication } from '../../interfaces/iapplication';
+import { IApplication } from '../../interfaces/i-application';
 import * as ApplicationManagementActions from '../actions/application-management.action';
 
 export interface IApplicationManagement {

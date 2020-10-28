@@ -88,6 +88,7 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
     }
 
     const source = this.sourceForm.value;
+
     const group = this.fb.group({
       language: [source.language, Validators.required],
       value: [source.value, Validators.required]
@@ -102,8 +103,8 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
     return addedValues.filter(x => x.language === id.toString()).length > 0;
   }
 
-  getLanguageName(id): string{
-    const found = this.languages.filter(x => x.id.toString() === id);
+  getLanguageName(langCode: string): string{
+    const found = this.languages.filter(x => x.langCode.toString() === langCode);
     return found.length > 0 ? found[0].langCode : '';
   }
 

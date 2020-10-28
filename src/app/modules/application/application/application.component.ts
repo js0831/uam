@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { environment } from 'src/environments/environment';
-import { IApplication } from '../../../shared/interfaces/iapplication';
+import { IApplication } from '../../../shared/interfaces/i-application';
+import { EVENTS, EventService } from '../../../shared/services/event.service';
 
 @Component({
   selector: 'app-application',
@@ -14,11 +15,7 @@ import { IApplication } from '../../../shared/interfaces/iapplication';
 export class ApplicationComponent implements OnInit {
 
   public language = environment.language;
-  public modalTitle: string;
-  public saveButtonText = 'Save';
-  public form: FormGroup;
   public descriptionForm: FormGroup;
-  public showModal = false;
   public editId: string;
 
   applications = [
@@ -44,21 +41,20 @@ export class ApplicationComponent implements OnInit {
   ];
 
   constructor(
-    private formBuilder: FormBuilder,
     private api: ApiService,
-    private localdata: LocalDataService,
-    private router: Router
+    private localDataService: LocalDataService,
+    private router: Router,
+    private eventService: EventService
   ) { }
 
   ngOnInit(): void {
-    this.buildForm();
 
     if (environment.staticData){
 
-      if (!this.localdata.get('applications')){
-        this.localdata.save('applications', this.applications);
+      if (!this.localDataService.get('applications')){
+        this.localDataService.save('applications', this.applications);
       } else {
-        this.applications = this.localdata.get('applications');
+        this.applications = this.localDataService.get('applications');
       }
 
       return;
@@ -73,82 +69,20 @@ export class ApplicationComponent implements OnInit {
     this.applications = list.lstApplications;
   }
 
-  private buildForm(): void {
-    this.form = this.formBuilder.group({
-      systemId: ['', [Validators.required]],
-      allowMultiple: false
-    });
+  addNewApplication(): void {
+    this.eventService.dispatch({ type: EVENTS.SHOW_ADD_APP_MODAL });
   }
 
-  showAppForm(type: string, app?: IApplication): void {
-    if (type === 'add') {
-      this.modalTitle = 'New Application';
-      this.saveButtonText = 'Save';
-      this.editId = null;
-    } else {
-      this.saveButtonText = 'Update';
-      this.modalTitle = `Edit ${app.systemId}`;
-      this.editId = app.systemId;
-      this.form.get('systemId').patchValue(app.systemId);
-      setTimeout( x => {
-        this.appendCurrentTranslations(app.translations);
-      }, 0);
-    }
+  // private appendCurrentTranslations(translations: any[]): void{
+  //   translations.forEach( x => {
+  //     const group = this.formBuilder.group({
+  //       language: [x.langId.toString(), Validators.required],
+  //       value: [x.value, Validators.required]
+  //     });
+  //     (this.form.get('translations') as FormArray).push(group);
+  //   });
+  // }
 
-    this.showModal = true;
-  }
-
-  private appendCurrentTranslations(translations: any[]): void{
-    translations.forEach( x => {
-      const group = this.formBuilder.group({
-        language: [x.langId.toString(), Validators.required],
-        value: [x.value, Validators.required]
-      });
-      (this.form.get('translations') as FormArray).push(group);
-    });
-  }
-
-  closeModal(): void {
-    this.form.reset();
-    this.showModal = false;
-  }
-
-
-  async submitForm(): Promise<any> {
-    this.form.markAllAsTouched();
-    const { systemId, translations, allowMultiple }: IApplication = this.form.value;
-    if (this.form.invalid) {
-      alert('All fields are required');
-      return;
-    }
-
-    if (!this.englishExist(translations)) {
-      alert('English translation is required');
-      return;
-    }
-
-    this.showModal = false;
-    const descriptions = translations.map( x => {
-      return {
-        keyVal: systemId,
-        langId: Number(x.language),
-        value: x.value
-      };
-    });
-
-    const data = {
-      systemDescription: systemId,
-      systemId,
-      translations: descriptions,
-      allowMultiple
-    };
-
-    if (this.modalTitle.includes('Edit')) {
-      // await this.updateApplication(data);
-      return;
-    }
-    await this.createApplication(data);
-  }
 
 
   // async updateApplication(data): Promise<any>{
@@ -178,33 +112,6 @@ export class ApplicationComponent implements OnInit {
     });
   }
 
-  async createApplication(data): Promise<any>{
-    if (environment.staticData){
-      this.applications.push({
-        systemId: data.systemId,
-        systemDescription: data.systemId,
-        allowMultiple: data.allowMultiple,
-        translations: data.translations.map( x => {
-          return {
-            id: new Date().getTime(),
-            ...x
-          };
-        })
-      });
-      this.saveLocalData();
-      this.form.reset();
-      return;
-    }
-    const saved = await this.api.create('application/createApplication', data).toPromise();
-    this.form.reset();
-    this.applications.push(saved.application);
-  }
-
-  englishExist(translations): boolean {
-    const found = translations.filter( x => x.language === '1').length > 0;
-    return found;
-  }
-
   async delete(app: IApplication): Promise<any> {
     const sure = confirm('Are you sure?');
     if (!sure){
@@ -215,7 +122,7 @@ export class ApplicationComponent implements OnInit {
       this.applications = this.applications.filter( x => {
         return x.systemId !== app.systemId;
       });
-      this.saveLocalData();
+      // this.saveLocalData();
       return;
     }
 
@@ -228,13 +135,9 @@ export class ApplicationComponent implements OnInit {
   }
 
   view(app: IApplication): void{
-    this.localdata.save('application', app);
+    this.localDataService.save('application', app);
     setTimeout( x => {
       this.router.navigate(['application', app.systemId]);
     }, 250);
-  }
-
-  private saveLocalData(): void{
-    this.localdata.save('applications', this.applications);
   }
 }

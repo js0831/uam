@@ -7,6 +7,7 @@ import { ApplicationViewComponent } from './application-view/application-view.co
 import { TestComponent } from './test/test.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationAttributeOptionsComponent } from './application-attribute-options/application-attribute-options.component';
+import { CreateApplicationComponent } from './create-application/create-application.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,8 @@ const routes: Routes = [
     ApplicationComponent,
     ApplicationViewComponent,
     TestComponent,
-    ApplicationAttributeOptionsComponent
+    ApplicationAttributeOptionsComponent,
+    CreateApplicationComponent
   ],
   imports: [
     CommonModule,

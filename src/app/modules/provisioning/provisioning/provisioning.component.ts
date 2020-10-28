@@ -4,7 +4,7 @@ import { ApiService } from '../../../shared/services/api.service';
 import { STATIC_DATA } from '../../../shared/data/static.data';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
-import { IApplication } from '../../../shared/interfaces/iapplication';
+import { IApplication } from '../../../shared/interfaces/i-application';
 import { IMultipleSelectionTag } from '../../../shared/interfaces/i-multiple-selection-tag';
 
 interface ISelectionApplications extends IApplication {
