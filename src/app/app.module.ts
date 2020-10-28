@@ -1,5 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+
+import * as applicationManagementReducer from './shared/store/reducers/application-management.reducer';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +20,9 @@ import { JkWaitModule } from 'jk-wait';
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    StoreModule.forRoot({
+      applicationManagement: applicationManagementReducer.reducer
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
