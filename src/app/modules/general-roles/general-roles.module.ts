@@ -5,20 +5,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { GeneralRoleListComponent } from './general-role-list/general-role-list.component';
+import { CreateGeneralRolesComponent } from './create-general-roles/create-general-roles.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: GeneralRolesComponent
-  },
-  {
-    path: 'list',
-    component: GeneralRoleListComponent
-  }
+  { path: '', component: GeneralRolesComponent },
+  { path: 'list', component: GeneralRoleListComponent },
+  { path: 'create', component: CreateGeneralRolesComponent }
 ];
 
 @NgModule({
-  declarations: [GeneralRolesComponent, GeneralRoleListComponent],
+  declarations: [GeneralRolesComponent, GeneralRoleListComponent, CreateGeneralRolesComponent],
   imports: [
     CommonModule,
     FormsModule,

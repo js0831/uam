@@ -1,0 +1,115 @@
+<h2 class="section-title">General Role Maintenance</h2>
+<form class="levelOne" [formGroup]="levelOneForm">
+    <div>
+        <div class="form-group">
+            <label>Organization</label>
+            <select class="form-control form-control-sm" formControlName="job_duty_id">
+                <option></option>
+                <option [value]="jobDuty.id" *ngFor="let jobDuty of firstLeveldata.jobDuties">{{jobDuty.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Channel</label>
+            <select class="form-control form-control-sm" formControlName="channel_id">
+                <option></option>
+                <option [value]="ch.id" *ngFor="let ch of firstLeveldata.channels">{{ch.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Team</label>
+            <select class="form-control form-control-sm" formControlName="team_id">
+                <option></option>
+                <option [value]="ch.id" *ngFor="let ch of firstLeveldata.teams">{{ch.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-6">
+                    <label>From Date</label>
+                    <input class="form-control form-control-sm" type="date" />
+                </div>
+                <div class="col-6">
+                    <label>To Date</label>
+                    <input class="form-control form-control-sm" type="date" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="applicationRole">
+        <div class="form-group">
+            <label>Business Job Role</label>
+            <app-multiple-selection (onSelectionChange)="onSelectionChange($event)" [selection]="this.multipleSelectionBusinessRoles"></app-multiple-selection>
+        </div>
+    </div>
+</form>
+
+<h2 class="section-title">Application Assignment</h2>
+<form [formGroup]="applicationForm" class="application">
+    <div class="form-group">
+        <label>Application</label>
+        <select class="form-control form-control-sm" formControlName="application">
+            <option></option>
+            <ng-container *ngFor="let app of applications">
+                <option [value]="app.systemId" *ngIf="!app.removed">{{app.translations | itranslate}}</option>
+            </ng-container>
+
+        </select>
+        <button class="btn btn-primary btn-sm" (click)="addApplication()">Add Application</button>
+    </div>
+</form>
+
+<div [formGroup]="levelTwoForm" class="level-two">
+    <div>
+        <div class="card" *ngFor="let app of selectedApplications; let i=index">
+            <div class="card-header">
+                {{app.application.translations | itranslate}}
+
+                <button type="button" class="btn btn-link" (click)="removeApplication(app.id)">remove</button>
+            </div>
+            <div class="card-body">
+                <div class="form-group" *ngFor="let attr of app.attributes">
+                    <label> {{attr.translations | itranslate}}</label>
+
+                    <select class="form-control form-control-sm"
+                        *ngIf="getOptions(attr.attbId).length > 0;else inputField">
+                        <option></option>
+                        <option [selected]="option.default" [value]="option.value"
+                            *ngFor="let option of getOptions(attr.attbId)">
+                            {{option.translations | itranslate}}
+                        </option>
+                    </select>
+                    <ng-template #inputField>
+                        <input type="text" class="form-control form-control-sm">
+                    </ng-template>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-list mt-2">
+
+    <div class="table-list__buttons">
+        <label>Attributes</label>
+        <button type="button" class="btn btn-sm btn-success">Add New Attribute</button>
+    </div>
+   
+    <table class="table table-sm draggable">
+        <thead>
+            <tr> 
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Type</th>                
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div class="submit">
+    <button class="btn btn-primary" (click)="save()">Save</button>
+</div>
