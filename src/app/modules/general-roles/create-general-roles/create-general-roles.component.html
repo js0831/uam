@@ -39,7 +39,10 @@
     <div class="applicationRole">
         <div class="form-group">
             <label>Business Job Role</label>
-            <app-multiple-selection (onSelectionChange)="onSelectionChange($event)" [selection]="this.multipleSelectionBusinessRoles"></app-multiple-selection>
+            <select class="form-control form-control-sm" formControlName="business_role_id">
+                <option></option>
+                <option [value]="br.id" *ngFor="let br of firstLeveldata.businessRoles">{{br.name}}</option>
+            </select>
         </div>
     </div>
 </form>

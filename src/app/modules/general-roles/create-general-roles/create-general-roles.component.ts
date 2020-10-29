@@ -57,6 +57,8 @@ export class CreateGeneralRolesComponent implements OnInit {
 
   ngOnInit(): void {
 
+    console.log(this.firstLeveldata.jobDuties);
+
     this.testForm = this.fb.group({
       business_role_id: ['a'],
       channel_id: ['', Validators.required],
@@ -76,7 +78,6 @@ export class CreateGeneralRolesComponent implements OnInit {
       businessRoles: this.generalRoles.jobrole,
       teams: this.generalRoles.team,
     };
-    console.log(this.firstLeveldata);
 
     this.buildForms();
 
@@ -84,7 +85,6 @@ export class CreateGeneralRolesComponent implements OnInit {
       this.applications = this.localdata.get('applications');
       this.applicationAttributes = this.localdata.get('applicationAttributes') || [];
       this.attributeOptions = this.localdata.get('attributeOptions') || [];
-      console.log(this.attributeOptions);
     }
 
     if (!this.isStaticData) {
@@ -179,7 +179,6 @@ export class CreateGeneralRolesComponent implements OnInit {
       attributes,
       application: this.getApplicationBySystemId(appId)
     });
-    console.log(this.selectedApplications);
 
     this.toggleRemoveAppIfNotMultiple(appId);
     this.applicationForm.reset();
@@ -346,11 +345,27 @@ export class CreateGeneralRolesComponent implements OnInit {
       ]
     };
 
-    this.api.create('preset', data).subscribe( x => {
-      this.levelOneForm.reset();
-      this.levelTwoForm.reset();
-      alert('Success');
+    // this.api.create('preset', data).subscribe( x => {
+    //   this.levelOneForm.reset();
+    //   this.levelTwoForm.reset();
+    //   alert('Success');
+    // });
+
+    this.saveGeneralRoleToLocalStorage(levelOne);
+  }
+
+  private saveGeneralRoleToLocalStorage(levelOne) {
+    const generalRoles = JSON.parse(localStorage.getItem('general-roles')) || [];
+    generalRoles.push({
+      organization: this.firstLeveldata.jobDuties.filter(item => item.id == levelOne.job_duty_id)[0],
+      channel: this.firstLeveldata.channels.filter(item => item.id == levelOne.channel_id)[0],
+      team: this.firstLeveldata.teams.filter(item => item.id == levelOne.team_id)[0],
+      businessJobRole: this.firstLeveldata.businessRoles.filter(item => item.id == levelOne.business_role_id)[0],
+      id: new Date().getTime()
     });
+    localStorage.setItem('general-roles', JSON.stringify(generalRoles));
+    this.levelOneForm.reset();
+    this.levelTwoForm.reset();
   }
 
   // getAttributeOptions(attrID): any {

@@ -76,7 +76,6 @@ export class ProvisioningComponent implements OnInit {
       businessRoles: this.generalRoles.jobrole,
       teams: this.generalRoles.team,
     };
-    console.log(this.firstLeveldata);
 
     this.buildForms();
 
@@ -84,7 +83,6 @@ export class ProvisioningComponent implements OnInit {
       this.applications = this.localdata.get('applications');
       this.applicationAttributes = this.localdata.get('applicationAttributes') || [];
       this.attributeOptions = this.localdata.get('attributeOptions') || [];
-      console.log(this.attributeOptions);
     }
 
     if (!this.isStaticData) {
@@ -179,7 +177,6 @@ export class ProvisioningComponent implements OnInit {
       attributes,
       application: this.getApplicationBySystemId(appId)
     });
-    console.log(this.selectedApplications);
 
     this.toggleRemoveAppIfNotMultiple(appId);
     this.applicationForm.reset();
