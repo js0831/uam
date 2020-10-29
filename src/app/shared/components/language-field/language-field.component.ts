@@ -34,7 +34,7 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.sourceForm = this.fb.group({
-      language: ['', Validators.required],
+      language: ['1', Validators.required],
       value: ['', Validators.required]
     });
 
