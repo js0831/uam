@@ -1,0 +1,27 @@
+.application{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    > div{
+        flex:1;
+        display: flex;
+        align-items: center;
+
+        .allowMultiple{
+            flex: none;
+            width: 10rem;
+        }
+
+        &:first-child{
+            label{
+                width: 105px;
+            }
+        }
+
+        &:last-child{
+            flex: none;
+        }
+    }
+}

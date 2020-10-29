@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ApplicationAttributeOptionsComponent } from './application-attribute-options/application-attribute-options.component';
 import { CreateApplicationComponent } from './create-application/create-application.component';
 import { ApplicationListComponent } from './application-list/application-list.component';
+import { ApplicationUpdateFormComponent } from './application-update-form/application-update-form.component';
 
 const routes: Routes = [
   {
@@ -28,7 +29,8 @@ const routes: Routes = [
     TestComponent,
     ApplicationAttributeOptionsComponent,
     CreateApplicationComponent,
-    ApplicationListComponent
+    ApplicationListComponent,
+    ApplicationUpdateFormComponent
   ],
   imports: [
     CommonModule,

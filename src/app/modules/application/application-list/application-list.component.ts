@@ -43,7 +43,6 @@ export class ApplicationListComponent implements OnInit {
   private async fetchApplications(): Promise<void> {
     const response: { applications: ICustomApplicationFormat[] } = await this.applicationService.fetch().toPromise();
     this.applications = response.applications;
-    console.log(this.applications[0]);
   }
 
 }

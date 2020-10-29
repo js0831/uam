@@ -18,6 +18,14 @@ export class ApplicationService {
     return this.http.post(`${this.url}/createApplication`, body);
   }
 
+  public getById(id: number): Observable<{ application: ICustomApplicationFormat }> {
+    return this.http.get<{ application: ICustomApplicationFormat }>(`${this.url}/getApplicationById`, {
+      params: {
+        applicationId: id.toString()
+      }
+    });
+  }
+
   public fetch(limit: number = 10, offset: number = 0): Observable<{ applications: ICustomApplicationFormat[] }> {
     return this.http.get<{ applications: ICustomApplicationFormat[] }>(`${this.url}/getAllApplication`, {
       params: {
@@ -27,11 +35,15 @@ export class ApplicationService {
     });
   }
 
-  public delete(id: number) {
+  public delete(id: number): Observable<any> {
     return this.http.delete(`${this.url}/deleteApplication`, {
       params: {
         id: id.toString()
       }
     });
+  }
+
+  public update(body: ICreateApplicationRequestBody) {
+    return this.http.post(`${this.url}/updateApplication`, body);
   }
 }

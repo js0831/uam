@@ -26,7 +26,6 @@ export class ApplicationViewComponent implements OnInit {
   public saveButtonText: string;
   public editAttribute: any;
   public form: FormGroup;
-  public applicationForm: FormGroup;
   public showModal = false;
   public isExistingAttribute = false;
   public allAttributes = [];
@@ -51,9 +50,9 @@ constructor(
   ngOnInit(): void {
     this.application = this.localdata.get('application');
     this.buildForm();
-    setTimeout( x => {
-      this.appendCurrentTranslations(this.applicationForm, this.application.translation);
-    }, 0);
+    // setTimeout( x => {
+    //   this.appendCurrentTranslations(this.applicationForm, this.application.translation);
+    // }, 0);
 
     if (environment.staticData){
       const values = this.localdata.get('applicationAttributes');
@@ -62,13 +61,13 @@ constructor(
         return;
       }
 
-      const appId = this.application.systemId.replace(/\ /g, '_').toLowerCase();
-      this.applicationAttributes = values[`app-attr-${appId}`] || [];
+      // const appId = this.application.applicationId.replace(/\ /g, '_').toLowerCase();
+      // this.applicationAttributes = values[`app-attr-${appId}`] || [];
       return;
     }
 
     this.applicationAttributes = [];
-    this.getApplicationAttribute(this.application.systemId);
+    this.getApplicationAttribute(this.application.applicationId);
   }
 
   getAllAttributes(): any{
@@ -95,7 +94,7 @@ constructor(
   }
 
   private saveLocalData(): void {
-    const appId = this.application.systemId.replace(/\ /g, '_').toLowerCase();
+    const appId = this.application.applicationId.replace(/\ /g, '_').toLowerCase();
     const sortedValues = this.applicationAttributes.sort(this.sortCompare);
     const toSave = {
       ['app-attr-' + appId]: sortedValues
@@ -126,10 +125,6 @@ constructor(
       id: ['', [Validators.required]],
       type: ['', [Validators.required]],
       existing: ['', []],
-    });
-    this.applicationForm = this.formBuilder.group({
-      systemId: [this.application.systemId, [Validators.required]],
-      allowMultiple: [this.application.allowMultiple]
     });
   }
 
@@ -198,7 +193,7 @@ constructor(
       attbId: id,
       attbType: type,
       attbTitle: id,
-      systemId: this.application.systemId,
+      systemId: this.application.applicationId,
       translations: translations.map( x => {
         return {
           keyVal: id,
@@ -297,7 +292,7 @@ constructor(
     }
     const data = {
       roleAttributeId: app.attbId,
-      systemId: this.application.systemId
+      systemId: this.application.applicationId
     };
     await this.api.create('applicationroleattribute/deleteApplicationRoleAttribute', data).toPromise();
     this.applicationAttributes = this.applicationAttributes.filter( x => app.attbId !== x.attbId);
@@ -305,60 +300,60 @@ constructor(
 
 
   update(): void {
-    const formValue = this.applicationForm.value;
-    const translations = formValue.translations.map( x => {
-      return {
-        keyVal: formValue.systemId,
-        langId: Number(x.language),
-        value: x.value
-      };
-    });
-    // const updateData = {
-    //   oldSystemId: this.application.systemId,
-    //   systemDescription: formValue.systemId,
+    // const formValue = this.applicationForm.value;
+    // const translations = formValue.translations.map( x => {
+    //   return {
+    //     keyVal: formValue.systemId,
+    //     langId: Number(x.language),
+    //     value: x.value
+    //   };
+    // });
+    // // const updateData = {
+    // //   oldSystemId: this.application.systemId,
+    // //   systemDescription: formValue.systemId,
+    // //   systemId: formValue.systemId,
+    // //   translations,
+    // // };
+
+    // // update application attributes id if id changed
+    // if (this.application.applicationId !== formValue.systemId) {
+    //   let allAttributes = this.localdata.get('applicationAttributes');
+    //   if (Object.keys(allAttributes).length > 0) {
+    //     const appId = this.application.applicationId.replace(/\ /g, '_').toLowerCase();
+    //     const appAtribute = allAttributes['app-attr-' + appId];
+    //     delete allAttributes['app-attr-' + appId];
+    //     const newAppId = formValue.systemId.replace(/\ /g, '_').toLowerCase();
+    //     allAttributes = {
+    //       ...allAttributes,
+    //       ['app-attr-' + newAppId] : appAtribute
+    //     };
+    //     this.localdata.save('applicationAttributes', allAttributes);
+    //   }
+    // }
+
+    // this.localdata.save('application' , {
     //   systemId: formValue.systemId,
+    //   systemDescription: formValue.systemId,
+    //   allowMultiple: formValue.allowMultiple,
     //   translations,
-    // };
+    // });
 
-    // update application attributes id if id changed
-    if (this.application.systemId !== formValue.systemId) {
-      let allAttributes = this.localdata.get('applicationAttributes');
-      if (Object.keys(allAttributes).length > 0) {
-        const appId = this.application.systemId.replace(/\ /g, '_').toLowerCase();
-        const appAtribute = allAttributes['app-attr-' + appId];
-        delete allAttributes['app-attr-' + appId];
-        const newAppId = formValue.systemId.replace(/\ /g, '_').toLowerCase();
-        allAttributes = {
-          ...allAttributes,
-          ['app-attr-' + newAppId] : appAtribute
-        };
-        this.localdata.save('applicationAttributes', allAttributes);
-      }
-    }
+    // const apps = this.localdata.get('applications').map( x => {
+    //   if (x.systemId === this.application.applicationId) {
+    //     x.systemId = formValue.systemId;
+    //     x.systemDescription = formValue.systemId;
+    //     x.allowMultiple = formValue.allowMultiple;
+    //     x.translations = translations;
+    //   }
+    //   return x;
+    // });
+    // this.localdata.save('applications' , apps);
 
-    this.localdata.save('application' , {
-      systemId: formValue.systemId,
-      systemDescription: formValue.systemId,
-      allowMultiple: formValue.allowMultiple,
-      translations,
-    });
-
-    const apps = this.localdata.get('applications').map( x => {
-      if (x.systemId === this.application.systemId) {
-        x.systemId = formValue.systemId;
-        x.systemDescription = formValue.systemId;
-        x.allowMultiple = formValue.allowMultiple;
-        x.translations = translations;
-      }
-      return x;
-    });
-    this.localdata.save('applications' , apps);
-
-    this.wait.start();
-    setTimeout( x => {
-      alert('Success');
-      this.wait.end();
-    }, 500);
+    // this.wait.start();
+    // setTimeout( x => {
+    //   alert('Success');
+    //   this.wait.end();
+    // }, 500);
 
   }
 

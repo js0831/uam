@@ -4,45 +4,12 @@
             <a [routerLink]="['/application']">Application Maintenance</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">
-            {{application.systemId}}
+            {{application.applicationId}}
         </li>
     </ol>
 </nav>
 
-
-<form [formGroup]="applicationForm" class="section ">
-    <!-- <label class="mb-3">
-        <input formControlName="allowMultiple" type="checkbox" />
-        Allow multiple
-    </label> -->
-    <div class="application fform fform--inline">
-        <div class="form-group form-group-sm">
-            <label>
-                System ID:
-                <!-- <strong>{{application.systemId}}</strong> -->
-            </label>
-            <input type="text" class="form-control form-control-sm" formControlName="systemId">
-        </div>
-        <div class="form-group">
-            <label>
-                Description:
-                <app-language-field [title]="'Description'" [form]="applicationForm"></app-language-field>
-                <!-- <strong>{{application.translations | itranslate}}</strong> -->
-            </label>
-            <!-- <textarea class="form-control form-control-sm" rows="3" readonly></textarea> -->
-        </div>
-        <div class="form-group form-group-sm allowMultiple">
-            <label>
-                Allow Multiple:
-                <input formControlName="allowMultiple" type="checkbox" />
-            </label>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-sm btn-primary" (click)="update()">Update</button>
-            <button class="btn btn-sm btn-secondary" (click)="cancel()">Cancel</button>
-        </div>
-    </div>
-</form>
+<app-application-update-form></app-application-update-form>
 
 <div class="table-list">
 
@@ -120,7 +87,7 @@
                 <select #selectedApp class="form-control form-control-sm">
                     <option></option>
                     <ng-container *ngFor="let app of applications">
-                        <option [value]="app.systemId" *ngIf="app.systemId !== application.systemId">{{app.systemId}}</option>
+                        <option [value]="app.applicationId" *ngIf="app.applicationId !== application.applicationId">{{app.applicationId}}</option>
                     </ng-container>
                 </select>
             </div>
@@ -130,7 +97,7 @@
                     formControlName="existing" class="form-control form-control-sm">
                     <option></option>
                     <ng-container *ngFor="let attr of allAttributes">
-                        <option *ngIf="!hasAttribute(attr.attbId) && attr.systemId === selectedApp.value" [value]="attr.attbId">{{attr.attbId}}
+                        <option *ngIf="!hasAttribute(attr.attbId) && attr.applicationId === selectedApp.value" [value]="attr.attbId">{{attr.attbId}}
                         </option>
                     </ng-container>
 

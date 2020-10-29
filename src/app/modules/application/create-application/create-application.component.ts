@@ -46,7 +46,7 @@ export class CreateApplicationComponent implements OnInit, OnDestroy {
     const body: ICreateApplicationRequestBody = {
       application: {
         allowMultiple: value.allowMultiple,
-        systemId: value.systemId,
+        applicationId: value.systemId,
         translation
       }
     };

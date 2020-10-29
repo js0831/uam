@@ -143,7 +143,7 @@ export class ProvisioningComponent implements OnInit {
 
   toggleRemoveAppIfNotMultiple(appId: string) {
     this.applications = this.applications.map(item => {
-      if (item.systemId === appId && !item.allowMultiple) {
+      if (item.applicationId === appId && !item.allowMultiple) {
         item.removed = !item.removed;
       }
       return item;
@@ -153,7 +153,7 @@ export class ProvisioningComponent implements OnInit {
   getAppTranslation(systemId) {
     let app;
     this.applications.forEach(item => {
-      if (systemId === item.systemId) {
+      if (systemId === item.applicationId) {
         app = item;
       }
     });
@@ -161,7 +161,7 @@ export class ProvisioningComponent implements OnInit {
   }
 
   private getApplicationBySystemId(systemId) {
-    return this.applications.filter(item => item.systemId === systemId)[0];
+    return this.applications.filter(item => item.applicationId === systemId)[0];
   }
 
   async addApplication(): Promise<any> {
