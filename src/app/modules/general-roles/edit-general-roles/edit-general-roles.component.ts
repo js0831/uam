@@ -366,15 +366,15 @@ export class EditGeneralRolesComponent implements OnInit {
   }
 
   private saveGeneralRoleToLocalStorage(levelOne) {
-    const generalRoles = JSON.parse(localStorage.getItem('general-roles')) || [];
-    generalRoles.push({
-      organization: this.firstLeveldata.jobDuties.filter(item => item.id == levelOne.job_duty_id)[0],
-      channel: this.firstLeveldata.channels.filter(item => item.id == levelOne.channel_id)[0],
-      team: this.firstLeveldata.teams.filter(item => item.id == levelOne.team_id)[0],
-      businessJobRole: this.firstLeveldata.businessRoles.filter(item => item.id == levelOne.business_role_id)[0],
-      id: new Date().getTime()
-    });
-    localStorage.setItem('general-roles', JSON.stringify(generalRoles));
+    // const generalRoles = JSON.parse(localStorage.getItem('general-roles')) || [];
+    // generalRoles.push({
+    //   organization: this.firstLeveldata.jobDuties.filter(item => item.id == levelOne.job_duty_id)[0],
+    //   channel: this.firstLeveldata.channels.filter(item => item.id == levelOne.channel_id)[0],
+    //   team: this.firstLeveldata.teams.filter(item => item.id == levelOne.team_id)[0],
+    //   businessJobRole: this.firstLeveldata.businessRoles.filter(item => item.id == levelOne.business_role_id)[0],
+    //   id: new Date().getTime()
+    // });
+    // localStorage.setItem('general-roles', JSON.stringify(generalRoles));
     this.levelOneForm.reset();
     this.levelTwoForm.reset();
   }
