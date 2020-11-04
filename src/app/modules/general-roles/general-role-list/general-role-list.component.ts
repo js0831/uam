@@ -17,7 +17,9 @@ export class GeneralRoleListComponent implements OnInit {
 
   remove(generalRole) {
     if (confirm('Are you sure you want to remove this general role?')) {
-      this.generalRoles = this.generalRoles.filter(item => item.id === generalRole.id);
+      console.log(this.generalRoles);
+      console.log(generalRole);
+      this.generalRoles = this.generalRoles.filter(item => item.id != generalRole.id);
       localStorage.setItem('general-roles', JSON.stringify(this.generalRoles));
     }
   }
