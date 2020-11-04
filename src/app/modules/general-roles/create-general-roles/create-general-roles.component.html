@@ -1,7 +1,16 @@
-<app-create-general-roles-form></app-create-general-roles-form>
+<div class="container" style="background: white; margin-top: -0.5rem; min-height: calc(100vh - 48px)">
+    <app-create-general-roles-form></app-create-general-roles-form>
 
-<app-general-roles-groups></app-general-roles-groups>
+    <span class="spacer"></span>
 
-<div class="submit">
-    <button class="btn btn-primary">Save</button>
+    <div class="form">
+        <app-general-roles-groups></app-general-roles-groups>
+    </div>
+
+    <span class="spacer"></span>
+
+    <div style="text-align: right;">
+        <button style="margin-right: 8px;" class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary">Save</button>
+    </div>
 </div>

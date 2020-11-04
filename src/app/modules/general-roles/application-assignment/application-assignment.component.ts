@@ -10,6 +10,10 @@ interface IApplicationAttribute {
   options: IAttributeOption[];
 }
 
+interface IExtendedApplication extends IApplication {
+  removed?: boolean;
+}
+
 interface ISelectedApplication extends IApplication {
   attributes: IApplicationAttribute[];
 }
@@ -35,13 +39,14 @@ interface IAttributeOption {
 })
 export class ApplicationAssignmentComponent implements OnInit {
 
-  applications: IApplication[] = [];
+  applications: IExtendedApplication[] = [];
   selectedApps: ISelectedApplication[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
     this.applications = JSON.parse(localStorage.getItem('localData')).applications;
+    console.log(this.applications);
   }
 
   private getApplicationBySystemId(systemId: string): IApplication {
@@ -52,18 +57,28 @@ export class ApplicationAssignmentComponent implements OnInit {
     const applicationAttributes: IApplicationAttributeRecord = (JSON.parse(localStorage.getItem('localData')) || {}).applicationAttributes;
     const systemAttributes: IApplicationAttribute[] = applicationAttributes[`app-attr-${systemId.toLocaleLowerCase()}`];
     const attributeOptions: IAttributeOptionRecord = JSON.parse(localStorage.getItem('localData')).attributeOptions;
-    console.log(systemAttributes);
     systemAttributes.forEach((attribute, index) => {
       const optionKey: string = attribute.attbId.replace(/\s/g, '_').toLocaleLowerCase();
       const options: IAttributeOption[] = attributeOptions[`attr-opts-${optionKey}`];
       systemAttributes[index].options = options || [];
     });
-    const application: ISelectedApplication = {
-      ...this.getApplicationBySystemId(systemId),
+    const application: IExtendedApplication = this.getApplicationBySystemId(systemId);
+    const selectedApplication: ISelectedApplication = {
+      ...application,
       attributes: systemAttributes || []
     };
-    this.selectedApps.push(application);
-    console.log(this.selectedApps);
+    if (!application.allowMultiple) {
+      application.removed = true;
+    }
+    this.selectedApps.push(selectedApplication);
+  }
+
+  remove(selectedApp: ISelectedApplication) {
+    this.selectedApps = this.selectedApps.filter(app => app.systemId !== selectedApp.systemId);
+    const application: IExtendedApplication = this.getApplicationBySystemId(selectedApp.systemId);
+    if (!application.allowMultiple) {
+      application.removed = false;
+    }
   }
 
 }
