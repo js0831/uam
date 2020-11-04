@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { } from '../../../shared/interfaces/iapplication';
+import { Subscription } from 'rxjs';
+import { EventService } from '../../../shared/services/event.service';
 
 interface IRole {
   id: number;
@@ -27,16 +28,31 @@ interface IGeneralRoles {
   templateUrl: './create-general-roles.component.html',
   styleUrls: ['./create-general-roles.component.scss']
 })
-export class CreateGeneralRolesComponent implements OnInit {
+export class CreateGeneralRolesComponent implements OnInit, OnDestroy {
 
   generalRoles: IGeneralRoles;
+  roleGroups: number[] = [1];
   form: FormGroup;
+  private subscriptions: Subscription[] = [];
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private eventService: EventService) { }
 
   ngOnInit() {
     this.generalRoles = JSON.parse(localStorage.getItem('localData'))['general-roles'];
     this.buildForm();
+    this.watchEvents();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(item => item.unsubscribe());
+  }
+
+  private watchEvents() {
+    this.subscriptions.push(
+      this.eventService.get().subscribe(event => {
+        this.roleGroups.push(1);
+      })
+    );
   }
 
   private buildForm() {
