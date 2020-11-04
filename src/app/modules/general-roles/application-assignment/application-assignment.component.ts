@@ -46,7 +46,6 @@ export class ApplicationAssignmentComponent implements OnInit {
 
   ngOnInit(): void {
     this.applications = JSON.parse(localStorage.getItem('localData')).applications;
-    console.log(this.applications);
   }
 
   private getApplicationBySystemId(systemId: string): IApplication {

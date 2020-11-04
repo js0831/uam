@@ -5,24 +5,28 @@
             <label>Organization</label>
             <select class="form-control form-control-sm">
                 <option></option>
+                <option *ngFor="let org of generalRoles.organization">{{org.name}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Channel</label>
             <select class="form-control form-control-sm">
                 <option></option>
+                <option *ngFor="let channel of generalRoles.channel">{{channel.name}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Team</label>
             <select class="form-control form-control-sm">
                 <option></option>
+                <option *ngFor="let team of generalRoles.team">{{team.name}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Business Job Role</label>
             <select class="form-control form-control-sm">
                 <option></option>
+                <option *ngFor="let jobrole of generalRoles.jobrole">{{jobrole.name}}</option>
             </select>
         </div>
     </div>
