@@ -1,32 +1,32 @@
 <h2 class="section-title">General Role Maintenance</h2>
-<form>
+<form [formGroup]="form">
     <div class="row">
         <div class="col-3">
             <label>Organization</label>
-            <select class="form-control form-control-sm">
+            <select class="form-control form-control-sm" formControlName="organization">
                 <option></option>
-                <option *ngFor="let org of generalRoles.organization">{{org.name}}</option>
+                <option *ngFor="let org of generalRoles.organization" [value]="org.id">{{org.name}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Channel</label>
-            <select class="form-control form-control-sm">
+            <select class="form-control form-control-sm" formControlName="channel">
                 <option></option>
-                <option *ngFor="let channel of generalRoles.channel">{{channel.name}}</option>
+                <option *ngFor="let channel of generalRoles.channel" [value]="channel.id">{{channel.name}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Team</label>
-            <select class="form-control form-control-sm">
+            <select class="form-control form-control-sm" formControlName="team">
                 <option></option>
-                <option *ngFor="let team of generalRoles.team">{{team.name}}</option>
+                <option *ngFor="let team of generalRoles.team" [value]="team.id">{{team.name}}</option>
             </select>
         </div>
         <div class="col-3">
             <label>Business Job Role</label>
-            <select class="form-control form-control-sm">
+            <select class="form-control form-control-sm" formControlName="jobrole">
                 <option></option>
-                <option *ngFor="let jobrole of generalRoles.jobrole">{{jobrole.name}}</option>
+                <option *ngFor="let jobrole of generalRoles.jobrole" [value]="jobrole.id">{{jobrole.name}}</option>
             </select>
         </div>
     </div>

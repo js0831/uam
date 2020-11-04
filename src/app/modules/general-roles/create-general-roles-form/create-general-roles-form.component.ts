@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 interface IRole {
   id: number;
@@ -20,9 +21,10 @@ interface IGeneralRoles {
 export class CreateGeneralRolesFormComponent implements OnInit {
 
   generalRoles: IGeneralRoles;
+  @Input() public form: FormGroup;
 
   ngOnInit(): void {
     this.generalRoles = JSON.parse(localStorage.getItem('localData'))['general-roles'];
-    console.log(this.generalRoles);
   }
+
 }
