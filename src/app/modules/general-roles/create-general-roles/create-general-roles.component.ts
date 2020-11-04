@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EventService } from '../../../shared/services/event.service';
-
 interface IRole {
   id: number;
   name: string;
@@ -35,7 +34,10 @@ export class CreateGeneralRolesComponent implements OnInit, OnDestroy {
   form: FormGroup;
   private subscriptions: Subscription[] = [];
 
-  constructor(private formBuilder: FormBuilder, private eventService: EventService) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private eventService: EventService,
+  ) { }
 
   ngOnInit() {
     this.generalRoles = JSON.parse(localStorage.getItem('localData'))['general-roles'];
