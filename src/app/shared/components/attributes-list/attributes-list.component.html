@@ -29,7 +29,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let attr of attributes">
+                <tr 
+                    [ngClass]="{
+                        'dragging': dragging && dragging.guid === attr.guid,
+                        'dropping': dropping && dropping.guid === attr.guid
+                    }"
+                    draggable="true"
+                    (dragstart)="drag($event, attr)" 
+                    (dragend)="dragend()"
+                    (drop)="drop($event, attr)" 
+                    (dragover)="allowDrop($event, attr)"
+
+                    *ngFor="let attr of attributes"
+                >
                     <td>{{attr.id}}</td>
                     <td>{{attr.translations | itranslate}}</td>
                     <td> 

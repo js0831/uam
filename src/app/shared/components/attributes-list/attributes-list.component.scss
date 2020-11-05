@@ -38,3 +38,15 @@
 th{
     width:20rem;
 }
+
+[draggable=true] {
+    cursor: move
+}
+
+.dragging {
+    opacity: 0.25
+}
+
+.dropping {
+    background: #eee;
+}

@@ -5,4 +5,5 @@ export interface IAttribute {
     id: string;
     type: string;
     options?: IOption[];
+    order?: number;
 }
