@@ -1,0 +1,36 @@
+<div class="section">
+    <div class="section__head">
+        <h1 class="section__title section__title--large">Attributes Maintenance</h1>
+
+        <button class="btn btn-sm btn-primary attribute-heading__button" (click)="add()">Add New Attribute</button>
+    </div>
+    <div class="section__body">      
+        
+        <table class="table table-sm draggable">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let attr of (attributes$ | async).list">
+                    <td>{{attr.id}}</td>
+                    <td>{{attr.translations | itranslate}}</td>
+                    <td class="capitalize">
+                        {{attr.type}}
+                    </td> 
+                    <td class="table__actions">
+                        <a (click)="edit(attr)" >edit</a> | 
+                        <a (click)="delete(attr)" >delete</a>
+                    </td>
+                </tr> 
+            </tbody>
+        </table> 
+        
+    </div>
+</div>
+
+<app-attribute-form></app-attribute-form>

@@ -1,0 +1,24 @@
+<app-staff-information-form [parentForm]="form"></app-staff-information-form>
+
+<div class="section"> 
+    <div class="section__body" *ngIf="resetFlag">      
+        <app-daterange-form (onadd)="add($event)"></app-daterange-form>
+        <app-general-role-form [parentForm]="form" [title]="'General Role'"></app-general-role-form>
+        <app-attributes-list (onchange)="setAttributes($event)"></app-attributes-list>
+    </div>
+</div>
+ 
+<app-assigned-general-role-attributes
+    *ngIf="staffInfoData.length > 0"
+    (ondelete)="deleteAssigned($event)"
+    [data]="staffInfoData"
+></app-assigned-general-role-attributes>
+
+<div class="section">
+    <div class="section__body">      
+        <div class="form-buttons">
+            <button class="btn btn-primary" (click)="save()">Save</button>
+            <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+    </div>
+</div>

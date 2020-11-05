@@ -1,0 +1,60 @@
+<div class="section">
+    <div class="section__head">
+        <h2 class="section__title">
+            Options
+        </h2>
+    </div>
+    <div class="section__body">
+
+        <form class="form form--flex form--inline optionsForm" [formGroup]="form">
+            <div class="form-group">
+                <label>Description</label>
+                <app-language-field *ngIf="showDescription" [title]="'Description'" [form]="form"></app-language-field>
+            </div>
+            <div class="form-group">
+                <label>Value</label>
+                <input 
+                    [ngClass]="{'is-invalid': form.controls.value.invalid && form.controls.value.touched}"
+                    type="text" class="form-control form-control-sm" formControlName="value">
+            </div>
+            <button class="btn btn-sm btn-success" type="button" (click)="add()">
+                {{form.controls.id.value ? 'Update' : 'Add'}}
+            </button>
+            <button 
+                *ngIf="form.controls.id.value"
+                class="btn btn-sm btn-secondary" type="button" (click)="cancelEdit()">
+                Cancel
+            </button>
+        </form>
+
+        <table class="table table-sm draggable">
+            <thead>
+                <tr>
+                    <th scope="col">Description</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Default</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of options">
+                    <td>{{option.translations | itranslate}}</td>
+                    <td>{{option.value}}</td>
+                    <td>
+                        <div class="form-check">
+                            <input type="checkbox" 
+                                (change)="setDefault(option)"
+                                class="form-check-input" [checked]="option.isDefault"> 
+                        </div>
+                    </td> 
+                    <td class="table__actions">
+                        <a (click)="edit(option)" >edit</a> | 
+                        <a (click)="delete(option)" >delete</a>
+                    </td>
+                </tr> 
+            </tbody>
+        </table>
+
+    </div>
+</div>
+

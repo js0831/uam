@@ -1,0 +1,34 @@
+.header{
+    background:#0e73ce;
+    height:3rem;
+
+    &__inner{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        width: 95%; 
+        margin:auto;
+    }
+
+    &__logo{
+        h1{
+            color: #fff;
+            font-size: 1.75rem;
+            font-weight: 300;
+        }
+    }
+}
+
+.content{
+    min-height: calc(100vh - 3rem);
+    background: #9c9c9c;
+    padding-top: .5rem;
+
+    &__inner{
+        width:100%;
+        max-width: 95%;
+        margin:auto;
+    }
+}
+

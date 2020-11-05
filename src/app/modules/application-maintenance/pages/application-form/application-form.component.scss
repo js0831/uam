@@ -1,0 +1,20 @@
+.applicationForm {
+    label {
+        width: 9rem;
+        text-align: right;
+    }
+
+    .form-group:last-child {
+        label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+        }
+    }
+}
+
+.buttons{
+    display:flex;
+    gap: .5rem;
+}

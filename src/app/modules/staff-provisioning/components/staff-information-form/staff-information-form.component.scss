@@ -1,0 +1,18 @@
+.form-group {
+    &:first-child {
+        label {
+            width: 5rem;
+        }
+        input {
+            width: 10rem;
+        }
+    }
+    label {
+        margin-right: .5rem;
+        margin-left: 2rem;
+    }
+
+    input {
+        width: 17.5rem;
+    }
+}

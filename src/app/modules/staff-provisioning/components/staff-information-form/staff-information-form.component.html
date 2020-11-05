@@ -1,0 +1,27 @@
+<div class="section">
+    <div class="section__head">
+        <h2 class="section__title">Staff Information</h2>
+    </div>
+    <div class="section__body">
+        <form class="form form--flex form--inline" [formGroup]="parentForm.get('information')" *ngIf="parentForm">
+            <div class="form-group">
+                <label>Staff Number</label> 
+                <input type="text" 
+                    [ngClass]="{'is-invalid': isInvalid('staffNumber')}"
+                    class="form-control form-control-sm" formControlName="staffNumber">
+            </div>
+            <div class="form-group">
+                <label>Name</label>
+                <input 
+                    [ngClass]="{'is-invalid': isInvalid('name')}"
+                    type="text" class="form-control form-control-sm" formControlName="name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input 
+                    [ngClass]="{'is-invalid': isInvalid('email')}"
+                    type="email" class="form-control form-control-sm" formControlName="email">
+            </div> 
+        </form>
+    </div>
+</div>

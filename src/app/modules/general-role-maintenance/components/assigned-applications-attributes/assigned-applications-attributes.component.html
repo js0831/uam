@@ -1,0 +1,99 @@
+<div class="section"> 
+    <div class="section__body">
+        <div class="section" *ngFor="let row of data;let i = index"> 
+            <div class="section__head main"> 
+                <h1 class="section__title">
+                    <div class="daterange">
+                        <label>
+                            From Date:
+                            <strong>{{row.daterange.from}}</strong>
+                        </label>
+                        <label>
+                            To Date:
+                            <strong>{{row.daterange.to}}</strong>
+                        </label>
+                    </div>
+                </h1>
+
+                <a class="remove" (click)="remove(i)">remove</a>
+            </div>
+            <div class="section__body"> 
+                
+                <div class="section attributes"> 
+                    <div class="section__head"> 
+                        <h1 class="section__title">
+                            Attributes
+                        </h1>
+                    </div>
+                    <div class="section__body"> 
+                        <table class="table table-sm" >
+                            <thead>
+                                <tr> 
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Value</th>   
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                <tr *ngFor="let attr of row.attributes">
+                                    <td>{{attr.id}}</td>
+                                    <td>{{attr.translations | itranslate}}</td>
+                                    <td> 
+                
+                                        <input *ngIf="!attr.options || attr.options.length === 0;else withOptions" class="form-control form-control-sm" type="text">
+                
+                                        <ng-template #withOptions>
+                                            <select class="form-control form-control-sm">
+                                                <option></option>
+                                                <ng-container *ngFor="let option of attr.options">
+                                                    <option [selected]="option.isDefault" [value]="option.id">{{option.translations | itranslate}}</option>
+                                                </ng-container> 
+                                            </select>
+                                        </ng-template>
+                
+                                    </td> 
+                                </tr> 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section applications"> 
+                    <div class="section__head"> 
+                        <h1 class="section__title">
+                            Applications
+                        </h1>
+                    </div>
+                    <div class="section__body"> 
+                        <div class="card" *ngFor="let app of row.applications">
+                            <div class="card-header"> 
+                                {{app.translations | itranslate}}
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group" *ngFor="let attr of app.attributes">
+                                    <label>{{attr.translations | itranslate}}:</label>
+                                    
+                                    <input *ngIf="!attr.options || attr.options.length === 0;else withOptions" class="form-control form-control-sm" type="text">
+                
+                                    <ng-template #withOptions>
+                                        <select class="form-control form-control-sm">
+                                            <option></option>
+                                            <ng-container *ngFor="let option of attr.options">
+                                                <option [selected]="option.isDefault" [value]="option.id">{{option.translations | itranslate}}</option>
+                                            </ng-container> 
+                                        </select>
+                                    </ng-template>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="blocker"></div>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+

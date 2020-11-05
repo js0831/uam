@@ -1,0 +1,24 @@
+<app-general-role-form [parentForm]="form" [title]="'General Role Maintenance'"></app-general-role-form>
+
+<div class="section"> 
+    <div class="section__body" *ngIf="resetFlag">      
+        <app-daterange-form (onadd)="add($event)"></app-daterange-form>
+        <app-attributes-list (onchange)="setAttributes($event)"></app-attributes-list>
+        <app-application-assignment (onchange)="setApplications($event)"></app-application-assignment>
+    </div>
+</div>
+
+<app-assigned-applications-attributes
+    *ngIf="generalRoleData.length > 0"
+    (ondelete)="deleteAssigned($event)"
+    [data]="generalRoleData"
+></app-assigned-applications-attributes>
+
+<div class="section">
+    <div class="section__body">      
+        <div class="form-buttons">
+            <button class="btn btn-primary" (click)="save()">Save</button>
+            <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+    </div>
+</div>

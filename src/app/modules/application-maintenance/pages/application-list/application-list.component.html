@@ -1,0 +1,36 @@
+<div class="section">
+    <div class="section__head">
+        <h1 class="section__title section__title--large">Application Maintenance</h1>
+
+        <button class="btn btn-sm btn-primary attribute-heading__button" (click)="add()">Add New Application</button>
+    </div>
+    <div class="section__body">      
+        
+        <table class="table table-sm draggable">
+            <thead>
+                <tr>
+                    <th scope="col">System ID</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Allow Multiple</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let app of (applications$ | async).list">
+                    <td>{{app.systemID}}</td>
+                    <td>{{app.translations | itranslate}}</td>
+                    <td>
+                        {{app.allowMultiple === true ? 'Yes' : 'No'}}
+                    </td> 
+                    <td class="table__actions">
+                        <a (click)="edit(app)" >edit</a> | 
+                        <a (click)="delete(app.id)" >delete</a>
+                    </td>
+                </tr> 
+            </tbody>
+        </table> 
+        
+    </div>
+</div>
+
+<app-application-add></app-application-add>

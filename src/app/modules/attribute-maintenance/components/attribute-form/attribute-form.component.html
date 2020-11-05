@@ -1,0 +1,36 @@
+<app-modal
+    class="large"
+    [show]="showModal"
+    [saveBtn]="submitButtonText"
+    [closeBtn]="'Cancel'"
+    [title]="modalTitle"
+    (close)="closeModal()"
+    (submit)="submitForm()"
+>
+    <form class="form form--flex form--inline main-form" [formGroup]="form">
+        <div class="form-group">
+            <label>ID</label> 
+            <input 
+                [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}"
+                type="text" class="form-control form-control-sm" formControlName="id">
+        </div>
+        <div class="form-group">
+            <label>Type</label> 
+            <select 
+                [ngClass]="{'is-invalid': form.controls.id.invalid && form.controls.id.touched}"
+                class="form-control form-control-sm" formControlName="type">
+                <option></option>
+                <option value="string">String</option>
+                <option value="numeric">Numeric</option>
+                <option value="boolean">Boolean</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Title</label> 
+            <app-language-field [title]="'Title'" *ngIf="showModal" [form]="form"></app-language-field>
+        </div>
+    </form> 
+    <br>
+
+    <app-attribute-options *ngIf="form.get('guid').value" [attributeId]="form.get('guid').value"></app-attribute-options>
+</app-modal>

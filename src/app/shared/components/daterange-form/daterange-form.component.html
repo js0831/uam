@@ -1,0 +1,23 @@
+<div class="section section--no-border"> 
+    <div class="section__body">      
+        
+        <form class="form form--flex form--inline dateFields" [formGroup]="form">
+            <div class="form-group">
+                <label>From Date:</label>
+                <input 
+                    [ngClass]="{'is-invalid': form.controls.from.invalid && form.controls.from.touched}"
+                    type="date" class="form-control form-control-sm" formControlName="from"/>
+            </div>
+            <div class="form-group">
+                <label>To Date:</label>
+                <input 
+                    [ngClass]="{'is-invalid': form.controls.to.invalid && form.controls.to.touched}"
+                    type="date" class="form-control form-control-sm"  formControlName="to"/>
+            </div>
+
+            <button class="btn btn-sm btn-success" (click)="add()">Add</button>
+            
+        </form>
+        
+    </div>
+</div>

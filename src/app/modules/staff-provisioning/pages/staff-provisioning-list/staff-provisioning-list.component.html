@@ -1,0 +1,34 @@
+<div class="section">
+    <div class="section__head">
+        <h1 class="section__title section__title--large">Staff List</h1>
+
+        <button class="btn btn-sm btn-primary attribute-heading__button" (click)="add()">Add New Staff</button>
+    </div>
+    <div class="section__body">      
+        
+        <table class="table table-sm draggable">
+            <thead>
+                <tr>
+                    <th scope="col">Staff Number</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>81254880</td>
+                    <td>Darius Bualan</td>
+                    <td>
+                        dariusbualan@email.com
+                    </td> 
+                    <td class="table__actions">
+                        <a (click)="edit()" >edit</a> | 
+                        <a (click)="delete()" >delete</a>
+                    </td>
+                </tr> 
+            </tbody>
+        </table> 
+        
+    </div>
+</div>

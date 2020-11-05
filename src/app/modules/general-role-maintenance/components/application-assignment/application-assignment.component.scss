@@ -1,0 +1,38 @@
+.card {
+    margin-bottom: .5rem;
+    
+    .card-header{
+        background-color: #f7f7f7;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        button{
+            font-size: 0.7rem;
+            padding: 0;
+        }
+    }
+
+    .card-body{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 0.25rem;
+        padding: 0.5rem;
+    }
+}
+
+.applicationSelect {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    select{
+        min-width: 15rem;
+    }
+    button {
+        min-width: 8rem;
+    }
+}

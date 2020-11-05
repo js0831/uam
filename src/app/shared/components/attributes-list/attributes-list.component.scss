@@ -1,0 +1,40 @@
+
+.table {
+    input[type=text], select{
+        font-size: .75rem;
+    }
+
+    &__actions {
+        display: flex;
+    }
+}
+
+.attribute-heading {
+    padding: .25rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__title{
+        font-size: .9rem;
+        margin:0;
+    }
+}
+
+.attributeSelect {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    select{
+        min-width: 15rem;
+    }
+    button {
+        min-width: 8rem;
+    }
+}
+
+th{
+    width:20rem;
+}

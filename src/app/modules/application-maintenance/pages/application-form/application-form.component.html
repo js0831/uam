@@ -1,0 +1,33 @@
+<div class="section" *ngIf="toEditApplication"> 
+    <div class="section__head">
+        <h1 class="section__title section__title--large">Application Maintenance / {{ toEditApplication.systemID }}</h1>
+
+        
+        <div class="buttons">
+            <button class="btn btn-sm btn-primary" (click)="update()">Update</button>
+            <button class="btn btn-sm btn-secondary" (click)="cancel()">Cancel</button>
+        </div>
+    </div>
+    <div class="section__body">      
+        
+        <form class="form form--flex form--inline applicationForm" [formGroup]="form">
+            <div class="form-group">
+                <label>System ID:</label>
+                <input type="text" formControlName="systemId" class="form-control form-control-sm"/>
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <app-language-field [title]="'Description'" [form]="form"></app-language-field> 
+            </div>
+            <div class="form-group">
+                <label>
+                    Allow Multiple:
+                    <input formControlName="allowMultiple" type="checkbox" />
+                </label>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<app-attributes-list [current]="toEditApplication.attributes" (onchange)="onAttributeSelect($event)"></app-attributes-list>

@@ -1,0 +1,58 @@
+<div class="section">
+    <div class="section__head">
+        <h1 class="section__title">Attribute Assignment</h1>
+
+        <div class="attributeSelect">
+            <select class="form-control form-control-sm" [(ngModel)]="attribute">
+                <option></option>
+                <ng-container *ngFor="let attribute of (attributes$ | async).list">
+                    <option 
+                        *ngIf="!isAlreadyAdded(attribute.guid)"
+                        [value]="attribute.guid">{{attribute.id}}</option>
+                </ng-container> 
+            </select>
+
+            <button 
+                (click)="add()"
+                class="btn btn-sm btn-success attribute-heading__button">Add Attribute</button>
+        </div>
+    </div>
+    <div class="section__body">      
+        
+        <table class="table table-sm draggable" *ngIf="attributes.length > 0">
+            <thead>
+                <tr> 
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Value</th>                
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let attr of attributes">
+                    <td>{{attr.id}}</td>
+                    <td>{{attr.translations | itranslate}}</td>
+                    <td> 
+
+                        <input *ngIf="!attr.options || attr.options.length === 0;else withOptions" class="form-control form-control-sm" type="text">
+
+                        <ng-template #withOptions>
+                            <select class="form-control form-control-sm">
+                                <option></option>
+                                <ng-container *ngFor="let option of attr.options">
+                                    <option [selected]="option.isDefault" [value]="option.id">{{option.translations | itranslate}}</option>
+                                </ng-container> 
+                            </select>
+                        </ng-template>
+
+                    </td>
+                    <td class="table__actions">
+                        <a (click)="delete(attr)">delete</a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table> 
+        
+    </div>
+</div>
