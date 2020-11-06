@@ -39,10 +39,13 @@ export class ApplicationListComponent implements OnInit, OnDestroy{
     this.modalService.showModal('APPLICATION_FORM', true);
   }
 
-  delete(id: string): void{
-    const sure = confirm('Are you sure?');
-    if (!sure) { return; }
-    this.store.dispatch(remove({id}));
+  async delete(id: string): Promise<void> {
+    if (confirm('Are you sure?')) {
+      try {
+        await this.applicationService.delete(id);
+        this.store.dispatch(remove({id}));
+      } catch (error) { }
+    }
   }
 
   edit(app: IApplication): void {

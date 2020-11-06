@@ -25,4 +25,8 @@ export class ApplicationService {
       .toPromise()
       .then(response => response.application);
   }
+
+  public delete(id: string): Promise<{ deleteResult: string }> {
+    return this.httpClient.delete<{ deleteResult: string }>(this.url('/application/deleteApplication'), { params: { id }}).toPromise();
+  }
 }
