@@ -1,0 +1,21 @@
+@host = http://localhost:4003/uam-api/api
+
+###
+
+GET {{host}}/application/getAllApplication
+
+###
+
+POST {{host}}/application/createApplication
+Content-Type: application/json
+
+{
+    "application": {
+        "isAllowMultiple": true,
+        "applicationName": "App2",
+        "translates": {
+            "en": "Testing",
+            "zh_HK": ""
+        }
+    }
+}

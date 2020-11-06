@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ApplicationListComponent } from './pages/application-list/application-list.component';
 import { ApplicationFormComponent } from './pages/application-form/application-form.component';
 import { RouterModule, Routes } from '@angular/router';

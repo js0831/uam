@@ -4,7 +4,9 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { create } from 'src/app/modules/application-maintenance/store/application.actions';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { ApplicationService } from 'src/app/shared/services/application.service';
 import { IApplicationStore } from '../../interface/application-store.interface';
+import { IApplication } from '../../interface/application.interface';
 
 @Component({
   selector: 'app-application-add',
@@ -13,32 +15,33 @@ import { IApplicationStore } from '../../interface/application-store.interface';
 })
 export class ApplicationAddComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription[];
+  private subscriptions: Subscription[] = [];
 
-  form: FormGroup;
-  showModal = false;
-  submitButtonText = 'Save';
-  modalTitle = 'Add new Application';
+  public form: FormGroup;
+  public showModal: boolean = false;
+  public submitButtonText: string = 'Save';
+  public modalTitle: string = 'Add new Application';
 
   constructor(
     private formBuilder: FormBuilder,
     private modalService: ModalService,
+    private applicationService: ApplicationService,
     private store: Store<{application: IApplicationStore} >
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.buildForm();
-    this.subscription = [
-      this.listenModalEvent(),
-      // this.watchAttributeStore()
-    ];
+    this.subscriptions.push(this.listenModalEvent())
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private listenModalEvent(): Subscription{
-    return this.modalService.event.subscribe( (x: any) => {
-      if (!x.data) { return; }
-      if (x.data.modalId === 'APPLICATION_FORM' && x.event === 'SHOW_MODAL') {
-        this.showModal = x.data.value;
+    return this.modalService.event.subscribe((event: any) => {
+      if (event.data && event.data.modalId === 'APPLICATION_FORM' && event.event === 'SHOW_MODAL') {
+        this.showModal = event.data.value;
       }
     });
   }
@@ -50,28 +53,25 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
     });
   }
 
-  closeModal(): void{
+  public closeModal(): void{
     this.showModal = false;
     this.form.reset();
     this.modalService.reset();
   }
 
-  submitForm(): void {
+  public async submit(): Promise<void> {
     this.form.markAllAsTouched();
-    if (!this.isValidForm()) {
-      return;
+    if (this.isValidForm()) {
+      const formValue = this.form.value;
+      const data: IApplication = {
+        applicationName: formValue.systemId,
+        isAllowMultiple: formValue.allowMultiple,
+        translates: formValue.translations
+      };
+      const response: IApplication = await this.applicationService.create(data);
+      this.store.dispatch(create({ payload: response }));
+      this.closeModal();
     }
-
-    const form = this.form.value;
-    const data = {
-      id: new Date().getTime().toString(),
-      systemID: form.systemId,
-      allowMultiple: form.allowMultiple,
-      translations: form.translations
-    };
-    console.log(data);
-    this.store.dispatch(create({application: data}));
-    this.closeModal();
   }
 
   private isValidForm(): boolean {
@@ -79,16 +79,12 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
       alert('All fields are required');
       return false;
     }
-    const englishTranslationExist = this.form.value.translations.filter( x => x.language === '1');
+    const englishTranslationExist = this.form.value.translations.filter(x => x.language === '1');
     if (englishTranslationExist.length === 0) {
       alert('English Translation is required');
       return false;
     }
     return true;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.forEach( x => x.unsubscribe());
   }
 
 }

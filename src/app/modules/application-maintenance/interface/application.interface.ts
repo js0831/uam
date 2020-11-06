@@ -1,8 +1,10 @@
 import { IAttribute } from '../../attribute-maintenance/interface/attribute.interface';
+import { ITranslates } from './i-translates.interface';
 
 export interface IApplication {
-    id: string;
-    systemID: string;
-    allowMultiple?: boolean;
+    id?: string;
+    applicationName: string;
+    isAllowMultiple: boolean;
     attributes?: IAttribute[];
+    translates?: ITranslates;
 }

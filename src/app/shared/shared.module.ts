@@ -31,7 +31,7 @@ import { DaterangeFormComponent } from './components/daterange-form/daterange-fo
     LanguageFieldComponent,
     ItranslatePipe,
     AttributesListComponent,
-    DaterangeFormComponent
+    DaterangeFormComponent,
   ]
 })
 export class SharedModule { }

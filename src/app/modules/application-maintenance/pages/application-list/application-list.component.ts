@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'; 
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { LocalDataService } from 'src/app/shared/services/local-data.service';
+import { Observable } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { ApplicationService } from '../../../../shared/services/application.service';
 import { IApplicationStore } from '../../interface/application-store.interface';
 import { IApplication } from '../../interface/application.interface';
-import { edit, remove } from '../../store/application.actions';
+import { edit, remove, setList } from '../../store/application.actions';
 
 @Component({
   selector: 'app-application-list',
@@ -15,22 +15,25 @@ import { edit, remove } from '../../store/application.actions';
 })
 export class ApplicationListComponent implements OnInit, OnDestroy{
 
-  subscription: Subscription;
   applications$: Observable<IApplicationStore>;
 
   constructor(
     private modalService: ModalService,
     private store: Store<{application: IApplicationStore}>,
-    private localData: LocalDataService,
-    private router: Router
+    private router: Router,
+    private applicationService: ApplicationService
   ) {
     this.applications$ = store.select('application');
   }
 
   ngOnInit(): void {
-    this.subscription = this.applications$.subscribe( application => {
-      this.localData.save('applications', application.list);
-    });
+    this.fetchApplications();
+  }
+
+  private async fetchApplications(): Promise<void> {
+    const applications: IApplication[] = await this.applicationService.getAll();
+    console.log(applications);
+    this.store.dispatch(setList({ payload: applications }));
   }
 
   add(): void {

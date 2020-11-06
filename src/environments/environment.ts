@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   staticData: true,
-  language: 1
+  language: 1,
+  hostUrl: 'http://localhost:4003/uam-api/api'
 };
 
 /*

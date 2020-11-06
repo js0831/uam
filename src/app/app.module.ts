@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app.routing.module';
 import { attributeReducer } from './modules/attribute-maintenance/store/attribute.reducer';
 import { applicationReducer } from './modules/application-maintenance/store/application.reducer';
 import { DatePipe } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { DatePipe } from '@angular/common';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     StoreModule.forRoot({
       attribute: attributeReducer,
       application: applicationReducer

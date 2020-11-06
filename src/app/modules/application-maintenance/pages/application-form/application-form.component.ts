@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { IAttribute } from 'src/app/modules/attribute-maintenance/interface/attribute.interface';
 import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { IApplicationStore } from '../../interface/application-store.interface';
+import { IApplication } from '../../interface/application.interface';
 import { update } from '../../store/application.actions';
 import { LanguageFieldService } from './../../../../shared/services/language-field.service';
 
@@ -23,7 +24,6 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private localData: LocalDataService,
     private router: Router,
     private store: Store<{application: IApplicationStore}>,
     private languageFieldService: LanguageFieldService
@@ -31,7 +31,6 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
-    this.toEditApplication = this.localData.get('editApplication');
 
     if (!this.toEditApplication) {
       this.subscription = this.store.select('application').subscribe( x => {
@@ -40,13 +39,18 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
           return;
         }
         this.toEditApplication = x.edit;
-        this.localData.save('editApplication', x.edit);
         this.fillFormToEdit();
       });
       return;
     }
 
     this.fillFormToEdit();
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private fillFormToEdit(): void{
@@ -71,11 +75,11 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
 
   update(): void {
     const form = this.form.value;
-    const data = {
+    const data: IApplication = {
       id: form.id,
-      systemID: form.systemId,
-      allowMultiple: form.allowMultiple,
-      translations: form.translations,
+      applicationName: form.systemId,
+      isAllowMultiple: form.allowMultiple,
+      translates: form.translations,
       attributes: this.attributes
     };
 
@@ -92,13 +96,5 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
 
   cancel(): void{
     this.router.navigate(['application-maintenance']);
-  }
-
-  ngOnDestroy(): void {
-    this.localData.delete('editApplication');
-
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 }
