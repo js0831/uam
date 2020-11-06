@@ -20,11 +20,11 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
   sourceForm: FormGroup;
   languages = [
     {
-      id: 1,
+      id: 'en',
       langCode: 'en'
     },
     {
-      id: 2,
+      id: 'zh_HK',
       langCode: 'zh_HK'
     }
   ];
@@ -36,7 +36,7 @@ export class LanguageFieldComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.sourceForm = this.fb.group({
-      language: ['1', Validators.required],
+      language: ['en', Validators.required],
       value: ['', Validators.required]
     });
 

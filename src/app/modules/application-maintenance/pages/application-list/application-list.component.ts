@@ -32,7 +32,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy{
 
   private async fetchApplications(): Promise<void> {
     const applications: IApplication[] = await this.applicationService.getAll();
-    console.log(applications);
     this.store.dispatch(setList({ payload: applications }));
   }
 

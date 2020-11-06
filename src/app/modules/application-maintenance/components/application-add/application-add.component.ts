@@ -7,6 +7,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { ApplicationService } from 'src/app/shared/services/application.service';
 import { IApplicationStore } from '../../interface/application-store.interface';
 import { IApplication } from '../../interface/application.interface';
+import { ITranslates } from '../../interface/i-translates.interface';
 
 @Component({
   selector: 'app-application-add',
@@ -59,16 +60,28 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
     this.modalService.reset();
   }
 
-  public async submit(): Promise<void> {
-    this.form.markAllAsTouched();
-    if (this.isValidForm()) {
+  private formatTranslates(formValue: { language: string, value: string }[]): ITranslates {
+    const translates = {};
+    formValue.forEach(item => {
+      translates[item.language] = item.value;
+    })
+    return translates as ITranslates;
+  }
+
+  private formatCreateApplicationData(): IApplication {
       const formValue = this.form.value;
       const data: IApplication = {
         applicationName: formValue.systemId,
         isAllowMultiple: formValue.allowMultiple,
-        translates: formValue.translations
+        translates: this.formatTranslates(formValue.translations)
       };
-      const response: IApplication = await this.applicationService.create(data);
+      return data;
+  }
+
+  public async submit(): Promise<void> {
+    this.form.markAllAsTouched();
+    if (this.isValidForm()) {
+      const response: IApplication = await this.applicationService.create(this.formatCreateApplicationData());
       this.store.dispatch(create({ payload: response }));
       this.closeModal();
     }
@@ -79,7 +92,7 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
       alert('All fields are required');
       return false;
     }
-    const englishTranslationExist = this.form.value.translations.filter(x => x.language === '1');
+    const englishTranslationExist = this.form.value.translations.filter(x => x.language === 'en');
     if (englishTranslationExist.length === 0) {
       alert('English Translation is required');
       return false;
