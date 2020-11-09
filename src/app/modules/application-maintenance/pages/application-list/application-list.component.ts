@@ -49,8 +49,8 @@ export class ApplicationListComponent implements OnInit, OnDestroy{
   }
 
   edit(app: IApplication): void {
-    this.store.dispatch(edit({application: app}));
-    this.router.navigate(['application-maintenance', 'form']);
+    // this.store.dispatch(edit({application: app}));
+    this.router.navigate(['application-maintenance', 'form', app.id]);
   }
 
   ngOnDestroy(): void {

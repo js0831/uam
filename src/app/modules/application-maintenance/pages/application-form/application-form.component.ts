@@ -1,100 +1,82 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IAttribute } from 'src/app/modules/attribute-maintenance/interface/attribute.interface';
-import { LocalDataService } from 'src/app/shared/services/local-data.service';
-import { IApplicationStore } from '../../interface/application-store.interface';
+import { ApplicationService } from '../../../../shared/services/application.service';
+import { LanguageFieldService } from '../../../../shared/services/language-field.service';
 import { IApplication } from '../../interface/application.interface';
-import { update } from '../../store/application.actions';
-import { LanguageFieldService } from './../../../../shared/services/language-field.service';
+import { ITranslates } from '../../interface/i-translates.interface';
 
 @Component({
   selector: 'app-application-form',
   templateUrl: './application-form.component.html',
   styleUrls: ['./application-form.component.scss']
 })
-export class ApplicationFormComponent implements OnInit, OnDestroy {
+export class ApplicationFormComponent implements OnInit {
 
   form: FormGroup;
-  toEditApplication: any;
   subscription: Subscription;
   attributes: IAttribute[];
+  application: IApplication;
 
   constructor(
-    private formBuilder: FormBuilder,
     private router: Router,
-    private store: Store<{application: IApplicationStore}>,
+    private formBuilder: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private applicationService: ApplicationService,
     private languageFieldService: LanguageFieldService
   ) { }
 
-  ngOnInit(): void {
-    this.buildForm();
-
-    if (!this.toEditApplication) {
-      this.subscription = this.store.select('application').subscribe( x => {
-        if (!x.edit) {
-          this.cancel();
-          return;
-        }
-        this.toEditApplication = x.edit;
-        this.fillFormToEdit();
-      });
-      return;
-    }
-
-    this.fillFormToEdit();
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  private fillFormToEdit(): void{
-    this.form.patchValue({
-      id: this.toEditApplication.id,
-      systemId: this.toEditApplication.systemID,
-      allowMultiple: this.toEditApplication.allowMultiple
-    });
-
-    setTimeout( x => {
-      this.languageFieldService.appendCurrentTranslations(this.toEditApplication.translations, this.form);
-    });
-  }
-
-  private buildForm(): void {
+  async ngOnInit() {
+    this.application = await this.getApplication(this.activatedRoute.snapshot.params.id);
     this.form = this.formBuilder.group({
-      id: [''],
-      systemId: ['', [Validators.required]],
-      allowMultiple: false
+      applicationName: this.application.applicationName,
+      isAllowMultiple: this.application.isAllowMultiple,
+      translations: this.formBuilder.array([])
     });
+
+    this.populateTranslationField();
   }
 
-  update(): void {
-    const form = this.form.value;
-    const data: IApplication = {
-      id: form.id,
-      applicationName: form.systemId,
-      isAllowMultiple: form.allowMultiple,
-      translates: form.translations,
-      attributes: this.attributes
+  private populateTranslationField() {
+    const translates: ITranslates = this.application.translates;
+    this.languageFieldService.appendCurrentTranslations([
+      { language: 'en', value: translates.en },
+      { language: 'zh_HK', value: translates.zh_Hk }
+    ], this.form)
+  }
+
+  private async getApplication(id: string): Promise<IApplication> {
+    return await this.applicationService.get(id);
+  }
+
+  private getTranslatesFromTranslationFormArray(): ITranslates {
+    const formValue = this.form.value;
+    const translates: ITranslates = this.application.translates;
+    formValue.translations.forEach(item => {
+      translates[item.language] = item.value;
+    });
+    translates.id = +translates.id;
+    return translates;
+  }
+
+  async update() {
+    const formValue = this.form.value;
+    const translates: ITranslates = this.getTranslatesFromTranslationFormArray();
+    const application: IApplication = {
+      id: this.application.id,
+      applicationName: formValue.applicationName,
+      isAllowMultiple: formValue.isAllowMultiple,
+      translates: translates
     };
-
-    this.store.dispatch(
-      update({application: data})
-    );
-    alert('success');
-    this.router.navigate(['application-maintenance']);
+    const response = await this.applicationService.update(application);
+    this.application = response;
+    this.router.navigate(['application-maintenance/list']);
   }
 
-  onAttributeSelect(attributes: IAttribute[]): void {
-    this.attributes = attributes;
+  cancel() {
+    this.router.navigate(['application-maintenance/list']);
   }
 
-  cancel(): void{
-    this.router.navigate(['application-maintenance']);
-  }
 }

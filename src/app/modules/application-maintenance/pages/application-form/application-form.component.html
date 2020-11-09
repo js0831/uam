@@ -1,6 +1,6 @@
-<div class="section" *ngIf="toEditApplication"> 
+<div class="section"> 
     <div class="section__head">
-        <h1 class="section__title section__title--large">Application Maintenance / {{ toEditApplication.systemID }}</h1>
+        <h1 class="section__title section__title--large">Application Maintenance / {{ application?.applicationName }}</h1>
 
         
         <div class="buttons">
@@ -10,10 +10,10 @@
     </div>
     <div class="section__body">      
         
-        <form class="form form--flex form--inline applicationForm" [formGroup]="form">
+        <form class="form form--flex form--inline applicationForm" *ngIf="form" [formGroup]="form">
             <div class="form-group">
                 <label>System ID:</label>
-                <input type="text" formControlName="systemId" class="form-control form-control-sm"/>
+                <input type="text" formControlName="applicationName" class="form-control form-control-sm"/>
             </div>
             <div class="form-group">
                 <label>Description:</label>
@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label>
                     Allow Multiple:
-                    <input formControlName="allowMultiple" type="checkbox" />
+                    <input formControlName="isAllowMultiple" type="checkbox" />
                 </label>
             </div>
         </form>
@@ -30,4 +30,4 @@
     </div>
 </div>
 
-<app-attributes-list [current]="toEditApplication.attributes" (onchange)="onAttributeSelect($event)"></app-attributes-list>
+<!-- <app-attributes-list [current]="toEditApplication.attributes" (onchange)="onAttributeSelect($event)"></app-attributes-list> -->

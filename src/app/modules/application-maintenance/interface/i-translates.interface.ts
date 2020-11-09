@@ -1,5 +1,5 @@
 export interface ITranslates {
-  id: string;
+  id: number;
   en: string,
   zh_Hk: string;
 }

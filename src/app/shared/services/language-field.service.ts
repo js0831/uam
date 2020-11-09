@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LanguageFieldService {
-
-  constructor(
-  ) { }
-
   appendCurrentTranslations(translations: {language: any, value: string}[], form: FormGroup): void{
     translations.forEach( x => {
       const group = new FormGroup({
