@@ -3026,7 +3026,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 2:
+/***/ 1:
 /*!********************************!*\
   !*** multi ./src/polyfills.ts ***!
   \********************************/
@@ -3038,5 +3038,5 @@ module.exports = __webpack_require__(/*! C:\Users\81254880\Documents\uam\src\pol
 
 /***/ })
 
-},[[2,"runtime"]]]);
-//# sourceMappingURL=polyfills-es2015.js.map
+},[[1,"runtime"]]]);
+//# sourceMappingURL=polyfills.js.map
