@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-openshift": "ng build --base-href /uam-app/ && git checkout openshift && rm uam-app/* -rfv && cp dist/uamui/* uam-app"
   },
   "private": true,
   "dependencies": {
