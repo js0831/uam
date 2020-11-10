@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { IAttribute } from 'src/app/modules/attribute-maintenance/interface/attribute.interface';
 import { ApplicationService } from '../../../../shared/services/application.service';
 import { LanguageFieldService } from '../../../../shared/services/language-field.service';
@@ -16,8 +15,7 @@ import { ITranslates } from '../../interface/i-translates.interface';
 export class ApplicationFormComponent implements OnInit {
 
   form: FormGroup;
-  subscription: Subscription;
-  attributes: IAttribute[];
+  attributes: IAttribute[] = [];
   application: IApplication;
 
   constructor(
@@ -77,6 +75,10 @@ export class ApplicationFormComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['application-maintenance/list']);
+  }
+
+  onAttributeSelect(event) {
+    console.log(event);
   }
 
 }
