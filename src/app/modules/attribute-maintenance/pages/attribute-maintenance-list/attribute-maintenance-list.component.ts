@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { ModalService } from './../../../../shared/services/modal.service';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { edit, remove } from './../../store/attribute.actions';
-import { IAttributeStore } from '../../interface/attribute-store.interface';
+import { Observable } from 'rxjs';
+import { edit, remove, set } from './../../store/attribute.actions';
+import { ApplicationAttributeService } from '../../../../shared/services/application-attribute.service';
+import { ApplicationAttributeInterface } from '../../../../shared/interface/application-attribute.interface';
 
 @Component({
   selector: 'app-attribute-maintenance-list',
@@ -13,26 +13,22 @@ import { IAttributeStore } from '../../interface/attribute-store.interface';
 })
 export class AttributeMaintenanceListComponent implements OnInit, OnDestroy{
 
-  subscription: Subscription;
-  attributes$: Observable<IAttributeStore>;
+  attributes$: Observable<ApplicationAttributeInterface>;
 
   constructor(
     private modalService: ModalService,
-    private localData: LocalDataService,
-    private store: Store<{attribute: IAttributeStore}>
+    private applicationAttributeService: ApplicationAttributeService,
+    private store: Store<{attribute: ApplicationAttributeInterface}>
   ) {
     this.attributes$ = store.select('attribute');
-
-    this.subscription = this.attributes$.subscribe( attributes => {
-      this.localData.save('attributes', attributes.list);
-    });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const attributes = await this.applicationAttributeService.fetch();
+    this.store.dispatch(set({ payload: attributes }))
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.modalService.reset();
   }
 

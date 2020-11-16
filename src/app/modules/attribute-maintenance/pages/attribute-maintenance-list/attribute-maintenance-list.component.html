@@ -17,10 +17,10 @@
             </thead>
             <tbody>
                 <tr *ngFor="let attr of (attributes$ | async).list">
-                    <td>{{attr.id}}</td>
-                    <td>{{attr.translations | itranslate}}</td>
+                    <td>{{attr.attbName}}</td>
+                    <td>{{attr.translation | itranslate}}</td>
                     <td class="capitalize">
-                        {{attr.type}}
+                        {{attr.attbType}}
                     </td> 
                     <td class="table__actions">
                         <a (click)="edit(attr)" >edit</a> | 

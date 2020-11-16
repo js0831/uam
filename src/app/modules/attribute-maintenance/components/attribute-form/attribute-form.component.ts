@@ -5,6 +5,8 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { Store } from '@ngrx/store';
 import { create, edit, update } from './../../store/attribute.actions';
 import { LanguageFieldService } from './../../../../shared/services/language-field.service';
+import { ApplicationAttributeService } from './../../../../shared/services/application-attribute.service';
+import { ApplicationAttributeInterface } from './../../../../shared/interface/application-attribute.interface';
 
 @Component({
   selector: 'app-attribute-form',
@@ -20,10 +22,13 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
   submitButtonText = 'Save';
   showModal = false;
 
+  editAttribute: ApplicationAttributeInterface;
+
   constructor(
     private fb: FormBuilder,
     private modalService: ModalService,
     private store: Store<any>,
+    private applicationAttributeService: ApplicationAttributeService,
     private languageFieldService: LanguageFieldService
   ) { }
 
@@ -38,6 +43,7 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
   private watchAttributeStore(): Subscription{
     return this.store.select('attribute').subscribe( x => {
       if ( x.edit ) {
+        this.editAttribute = x.edit;
         this.showModal = true;
         this.modalTitle = 'Edit ' + x.edit.id;
         this.submitButtonText = 'Update';
@@ -50,7 +56,16 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
 
   private fillAttributeForm(data): void {
     this.form.patchValue(data);
-    this.languageFieldService.appendCurrentTranslations(data.translations, this.form);
+    const translation = [];
+    Object.keys(data.translation).forEach(key => {
+      if (key !== 'id' && data.translation[key]) {
+        translation.push({
+          language: key,
+          value: data.translation[key]
+        });
+      }
+    });
+    this.languageFieldService.appendCurrentTranslations(translation, this.form);
   }
 
   private listenModalEvent(): Subscription{
@@ -64,9 +79,9 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
 
   private buildForm(): void {
     this.form = this.fb.group({
-      guid: [''],
-      id: ['', [Validators.required]],
-      type: ['', [Validators.required]],
+      id: [''],
+      attbName: ['', [Validators.required]],
+      attbType: ['', [Validators.required]],
     });
   }
 
@@ -77,37 +92,55 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
     this.form.reset();
   }
 
-  submitForm(): void {
+  private transformTranslates(formValue): ApplicationAttributeInterface {
+    const translates: any = {};
+    formValue.translations.forEach(item => {
+      translates[item.language] = item.value;
+    });
+    return {
+      attbName: formValue.attbName,
+      attbType: formValue.attbType,
+      translation: translates
+    };
+  }
+
+  async submitForm(): Promise<void> {
     this.form.markAllAsTouched();
     if (!this.isValidForm()) {
       return;
     }
     const values = this.form.value;
-    if (!values.guid) {
-      this.createAttribute(values);
+    if (!values.id) {
+      this.createAttribute(this.transformTranslates(values));
       return;
     } else {
-      this.updateAttribute(values);
+      await this.updateAttribute(this.transformTranslates(values));
     }
 
     this.closeModal();
   }
 
-  private createAttribute(data: any): void {
-    const payload = {
-      ...data,
-      guid: new Date().getTime().toString(),
-      options: []
-    };
+  private async createAttribute(data: any): Promise<ApplicationAttributeInterface> {
+    const response = await this.applicationAttributeService.create(data);
     this.store.dispatch(create({
-      attribute: payload
+      attribute: response
     }));
-    this.store.dispatch(edit({attribute: payload}));
+    this.store.dispatch(edit({attribute: response}));
+    return response;
   }
 
-  private updateAttribute(data: any): void {
+  private async updateAttribute(data: any): Promise<void> {
+    const updateData: ApplicationAttributeInterface = {
+      ...data,
+      id: this.editAttribute.id,
+      translation: {
+        ...data.translation,
+        id: this.editAttribute.translation.id
+      }
+    };
+    const response = await this.applicationAttributeService.update(updateData);
     this.store.dispatch(update({
-      attribute: data
+      attribute: response
     }));
   }
 
@@ -116,7 +149,7 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
       alert('All fields are required');
       return false;
     }
-    const englishTranslationExist = this.form.value.translations.filter( x => x.language === '1');
+    const englishTranslationExist = this.form.value.translations.filter( x => x.language === 'en');
     if (englishTranslationExist.length === 0) {
       alert('English Translation is required');
       return false;

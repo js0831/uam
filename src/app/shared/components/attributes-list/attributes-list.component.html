@@ -43,7 +43,7 @@
                     *ngFor="let attr of attributes"
                 >
                     <td>{{attr.id}}</td>
-                    <td>{{attr.translations | itranslate}}</td>
+                    <td>{{attr.translation | itranslate}}</td>
                     <td> 
 
                         <input *ngIf="!attr.options || attr.options.length === 0;else withOptions" class="form-control form-control-sm" type="text">
