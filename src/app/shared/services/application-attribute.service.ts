@@ -1,5 +1,4 @@
 import { HttpClient } from '@angular/common/http';
-import { ThrowStmt } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ApplicationAttributeInterface } from '../interface/application-attribute.interface';
@@ -31,5 +30,12 @@ export class ApplicationAttributeService {
     return this.httpClient.post<{ roleAttr: ApplicationAttributeInterface }>(this.url('/roleattribute/updateRoleAttribute'), { roleAttr: applicationAttribute })
       .toPromise()
       .then(response => response.roleAttr);
+  }
+
+  public delete(applicationAttribute: ApplicationAttributeInterface): Promise<string> {
+    console.log(applicationAttribute);
+    return this.httpClient.post<{ deleteResult: string }>(this.url('/roleattribute/deleteRoleAttribute'), { roleAttr: applicationAttribute })
+      .toPromise()
+      .then(response => response.deleteResult);
   }
 }

@@ -37,13 +37,14 @@ export class AttributeMaintenanceListComponent implements OnInit, OnDestroy{
     this.modalService.showModal('ATTRIBUTE_FORM', true);
   }
 
-  delete(attr): void{
-    const sure = confirm('Are you sure?');
-    if (!sure) { return; }
-
-    this.store.dispatch(remove({
-      id: attr.guid
-    }));
+  async delete(attr): Promise<void> {
+    if (confirm('Are you sure you want to delete this item?')) {
+      const response = await this.applicationAttributeService.delete(attr);
+      console.log(response);
+      this.store.dispatch(remove({
+        payload: attr.id
+      }));
+    }
   }
 
   edit(attr): void{

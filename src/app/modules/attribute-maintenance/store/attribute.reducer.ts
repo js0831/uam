@@ -37,7 +37,7 @@ function createAttribute(state, action): IAttributeStore {
 function removeAttribute(state, action): IAttributeStore {
   return {
     ...state,
-    list: [...state.list.filter( x => x.guid !== action.id)]
+    list: [...state.list.filter( x => x.id !== action.payload)]
   };
 }
 
