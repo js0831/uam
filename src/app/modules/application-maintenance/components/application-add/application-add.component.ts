@@ -82,6 +82,7 @@ export class ApplicationAddComponent implements OnInit, OnDestroy {
     this.form.markAllAsTouched();
     if (this.isValidForm()) {
       const response: IApplication = await this.applicationService.create(this.formatCreateApplicationData());
+      console.log(response);
       this.store.dispatch(create({ payload: response }));
       this.closeModal();
     }

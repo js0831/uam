@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing.module';
 import { attributeReducer } from './modules/attribute-maintenance/store/attribute.reducer';
 import { applicationReducer } from './modules/application-maintenance/store/application.reducer';
+import { applicationAttributesReducer } from './modules/application-maintenance/store/application-attributes.reducer';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -18,7 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
     StoreModule.forRoot({
       attribute: attributeReducer,
-      application: applicationReducer
+      application: applicationReducer,
+      applicationAttributes: applicationAttributesReducer,
     }),
   ],
   providers: [

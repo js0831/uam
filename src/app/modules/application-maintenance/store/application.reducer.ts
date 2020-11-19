@@ -1,11 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
 import { create, remove, edit, update, setList } from './application.actions';
 import { IApplicationStore } from './../interface/application-store.interface';
-import { LocalDataService } from './../../../shared/services/local-data.service';
-import { IApplication } from '../interface/application.interface';
 
 export const initialState: IApplicationStore = {
-  list: new LocalDataService().get('applications') || [],
+  list: [],
   edit: null
 };
 

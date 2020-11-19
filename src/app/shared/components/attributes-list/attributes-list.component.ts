@@ -1,8 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IAttributeStore } from 'src/app/modules/attribute-maintenance/interface/attribute-store.interface';
 import { IAttribute } from 'src/app/modules/attribute-maintenance/interface/attribute.interface';
+import { addApplicationAttributeToListAction, removeApplicationAttributeFromListAction } from '../../../modules/application-maintenance/store/application-attributes.actions';
+import { ApplicationAttributesStoreInterface } from '../../../modules/attribute-maintenance/interface/application-attributes-store.interface';
+import { set } from '../../../modules/attribute-maintenance/store/attribute.actions';
+import { ApplicationAttributeInterface } from '../../interface/application-attribute.interface';
+import { ApplicationAttributeService } from '../../services/application-attribute.service';
+import { AttributeAssignmentService } from '../../services/attribute-assignment.service';
 
 @Component({
   selector: 'app-attributes-list',
@@ -12,43 +19,45 @@ import { IAttribute } from 'src/app/modules/attribute-maintenance/interface/attr
 export class AttributesListComponent implements OnInit {
 
   @Output() onchange = new EventEmitter<IAttribute[]>();
-  @Input() current: IAttribute[] = [];
 
-  attribute = '';
+  attribute: any = '';
   attributes$: Observable<IAttributeStore>;
-  attributes: IAttribute[] = [];
+
+  attributes: ApplicationAttributeInterface[] = [];
 
   dragging: IAttribute;
   dropping: IAttribute;
 
   constructor(
-    private store: Store<{attribute: IAttributeStore}>
+    private store: Store<{attribute: IAttributeStore, applicationAttributes: ApplicationAttributesStoreInterface}>,
+    private attributeAssignmentService: AttributeAssignmentService,
+    private applicationAttributeService: ApplicationAttributeService,
+    private activatedRoute: ActivatedRoute
   ) {
+
     this.attributes$ = store.select('attribute');
   }
 
   ngOnInit(): void {
-    if (this.current) {
-      this.attributes = [...this.current] || [];
-    }
+    this.fetchAllApplicationAttributes();
+    this.store.select('applicationAttributes').subscribe(attributes => {
+      this.attributes = attributes.list;
+    });
   }
 
-  add(): void {
+  private async fetchAllApplicationAttributes() {
+    const attributes = await this.applicationAttributeService.fetch();
+    this.store.dispatch(set({ payload: attributes }));
+  }
+
+  async add(): Promise<void> {
     if (!this.attribute) { return; }
-    this.attributes$.subscribe( (x: IAttributeStore) => {
-      const toAdd = x.list.filter(attr => attr.guid === this.attribute)[0];
-
-      const attributeOrder = this.generateOrderNumber();
-
-      this.attributes.push({
-        ...toAdd,
-        order: attributeOrder
-      });
-
-      this.onchange.emit(this.attributes);
-    });
-
-    this.attribute = '';
+    const response = await this.attributeAssignmentService.create({
+      applicationId: this.activatedRoute.snapshot.params.id,
+      attbId: this.attribute,
+      orderIndex: this.attributes.length
+    }, [...this.attributes.map(item => item.id), this.attribute]);
+    this.store.dispatch(addApplicationAttributeToListAction({ payload: response[response.length - 1] }))
   }
 
   generateOrderNumber(): number {
@@ -63,12 +72,20 @@ export class AttributesListComponent implements OnInit {
   }
 
   isAlreadyAdded(attributeId: string): boolean{
-    return this.attributes.filter( x => attributeId === x.guid).length > 0;
+    return this.attributes.filter(x => attributeId === x.id).length > 0;
   }
 
-  delete(attribute: IAttribute): void{
-    this.attributes = this.attributes.filter( x => x.guid !== attribute.guid);
-    this.onchange.emit(this.attributes);
+  async delete(attribute: ApplicationAttributeInterface): Promise<void> {
+    if (confirm('Are you sure you wan\'t to delete this item?')) {
+      const appOrdering = {
+        applicationId: this.activatedRoute.snapshot.params.id,
+        attbId: attribute.id,
+        orderIndex: this.attributes.length
+      };
+      const orderList = [...this.attributes.map(item => item.id)].filter(item => item !== attribute.id);
+      await this.attributeAssignmentService.delete(appOrdering, orderList);
+      this.store.dispatch(removeApplicationAttributeFromListAction({ payload: attribute }))
+    }
   }
 
 

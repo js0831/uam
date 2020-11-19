@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  database-service:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'uamdb'
+      MYSQL_USER: 'uamuser'
+      MYSQL_PASSWORD: 'uamuser'
+      MYSQL_ROOT_PASSWORD: 'uamuser'
+      ports:
+        - '3306:3306'
+      expose:
+        - '3306'
+      volumes:
+        - my-db:/var/lib/mysql
+volumes:
+  my-db:

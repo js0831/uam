@@ -6,7 +6,7 @@ import { ModalService } from 'src/app/shared/services/modal.service';
 import { ApplicationService } from '../../../../shared/services/application.service';
 import { IApplicationStore } from '../../interface/application-store.interface';
 import { IApplication } from '../../interface/application.interface';
-import { edit, remove, setList } from '../../store/application.actions';
+import { remove, setList } from '../../store/application.actions';
 
 @Component({
   selector: 'app-application-list',

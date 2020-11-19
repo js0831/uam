@@ -33,7 +33,6 @@ export class ApplicationAttributeService {
   }
 
   public delete(applicationAttribute: ApplicationAttributeInterface): Promise<string> {
-    console.log(applicationAttribute);
     return this.httpClient.post<{ deleteResult: string }>(this.url('/roleattribute/deleteRoleAttribute'), { roleAttr: applicationAttribute })
       .toPromise()
       .then(response => response.deleteResult);

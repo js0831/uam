@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAttribute } from 'src/app/modules/attribute-maintenance/interface/attribute.interface';
+import { Store } from '@ngrx/store';
+import { ApplicationAttributeInterface } from '../../../../shared/interface/application-attribute.interface';
 import { ApplicationService } from '../../../../shared/services/application.service';
+import { AttributeAssignmentService } from '../../../../shared/services/attribute-assignment.service';
 import { LanguageFieldService } from '../../../../shared/services/language-field.service';
+import { ApplicationAttributesStoreInterface } from '../../../attribute-maintenance/interface/application-attributes-store.interface';
 import { IApplication } from '../../interface/application.interface';
 import { ITranslates } from '../../interface/i-translates.interface';
+import { setApplicationAttributesListAction } from '../../store/application-attributes.actions';
 
 @Component({
   selector: 'app-application-form',
@@ -15,15 +19,17 @@ import { ITranslates } from '../../interface/i-translates.interface';
 export class ApplicationFormComponent implements OnInit {
 
   form: FormGroup;
-  attributes: IAttribute[] = [];
+  attributes: ApplicationAttributeInterface[] = [];
   application: IApplication;
 
   constructor(
+    private store: Store<{attribute: ApplicationAttributesStoreInterface}>,
     private router: Router,
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private applicationService: ApplicationService,
-    private languageFieldService: LanguageFieldService
+    private languageFieldService: LanguageFieldService,
+    private attributeAssignmentService: AttributeAssignmentService,
   ) { }
 
   async ngOnInit() {
@@ -35,6 +41,12 @@ export class ApplicationFormComponent implements OnInit {
     });
 
     this.populateTranslationField();
+    this.fetchCurrentApplicationAttributes();
+  }
+
+  private async fetchCurrentApplicationAttributes() {
+    const attributes = await this.attributeAssignmentService.fetch(this.activatedRoute.snapshot.params.id);
+    this.store.dispatch(setApplicationAttributesListAction({ payload: attributes }))
   }
 
   private populateTranslationField() {
