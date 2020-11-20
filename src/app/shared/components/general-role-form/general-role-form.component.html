@@ -10,7 +10,7 @@
                     [ngClass]="{'is-invalid': isInvalid('jobDuty')}"
                     class="form-control form-control-sm" formControlName="jobDuty">
                     <option></option>
-                    <option [value]="org.id" *ngFor="let org of dummyData.organization">{{org.name}}</option>
+                    <option [value]="org.id" *ngFor="let org of list.organization">{{org.translation | itranslate}}</option>
                 </select>
             </div>
             <div class="form-group">
@@ -19,7 +19,7 @@
                     [ngClass]="{'is-invalid': isInvalid('channel')}"
                     class="form-control form-control-sm" formControlName="channel">
                     <option></option>
-                    <option [value]="ch.id" *ngFor="let ch of dummyData.channel">{{ch.name}}</option>
+                    <option [value]="ch.id" *ngFor="let ch of list.channel">{{ch.translation | itranslate}}</option>
                 </select>
             </div>
             <div class="form-group">
@@ -28,7 +28,7 @@
                     [ngClass]="{'is-invalid': isInvalid('team')}"
                     class="form-control form-control-sm" formControlName="team">
                     <option></option>
-                    <option [value]="ch.id" *ngFor="let ch of dummyData.team">{{ch.name}}</option>
+                    <option [value]="ch.id" *ngFor="let ch of list.team">{{ch.translation | itranslate}}</option>
                 </select>
             </div>
             <div class="form-group">
@@ -37,7 +37,7 @@
                     [ngClass]="{'is-invalid': isInvalid('businessRole')}"
                     class="form-control form-control-sm" formControlName="businessRole">
                     <option></option>
-                    <option [value]="br.id" *ngFor="let br of dummyData.jobrole">{{br.name}}</option>
+                    <option [value]="br.id" *ngFor="let br of list.jobrole">{{br.translation | itranslate}}</option>
                 </select>
             </div>
         </form>

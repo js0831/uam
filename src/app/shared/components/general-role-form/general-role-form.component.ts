@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LocalDataService } from '../../services/local-data.service';
+import { BusinessJobRoleService } from '../../services/business-job-role.service';
+import { ChannelService } from '../../services/channel.service';
+import { OrganizationService } from '../../services/organization.service';
+import { TeamService } from '../../services/team.service';
 
 @Component({
   selector: 'app-general-role-form',
@@ -12,29 +15,53 @@ export class GeneralRoleFormComponent implements OnInit {
   @Input() title: string;
   @Input() parentForm: FormGroup;
 
-  dummyData: {
+  list: {
     organization: any[],
     team: any[],
     channel: any[],
     jobrole: any[],
+  } = {
+    organization: [],
+    team: [],
+    channel: [],
+    jobrole: [],
   };
 
 
   constructor(
     private fb: FormBuilder,
-    private localData: LocalDataService
+    private organizationService: OrganizationService,
+    private channelService: ChannelService,
+    private teamService: TeamService,
+    private businessJobRoleService: BusinessJobRoleService
   ) { }
 
   ngOnInit(): void {
     this.buildForm();
-    this.dummyData = this.localData.get('dummy-general-roles') || {
-      organization : [],
-      team : [],
-      channel : [],
-      jobrole : [],
-    };
+    this.fetchOrganizations();
+    this.fetchChannels();
+    this.fetchTeams();
+    this.fetchBusinessJobRole();
+  }
 
-    console.log(this.dummyData);
+  private async fetchBusinessJobRole() {
+    const response = await this.businessJobRoleService.fetch();
+    this.list.jobrole = response || [];
+  }
+
+  private async fetchTeams() {
+    const response = await this.teamService.fetch();
+    this.list.team = response || [];
+  }
+
+  private async fetchOrganizations() {
+    const response = await this.organizationService.fetch();
+    this.list.organization = response || [];
+  }
+
+  private async fetchChannels() {
+    const response = await this.channelService.fetch();
+    this.list.channel = response || [];
   }
 
   private buildForm(): void {
