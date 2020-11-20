@@ -41,5 +41,4 @@ export class ApplicationService {
       .toPromise()
       .then(response => response.application);
   }
-
 }

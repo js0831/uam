@@ -16,64 +16,64 @@
             <tbody>
                 <tr class="input-fields"> 
                     <th>
-                        <form (submit)="save('organization')">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.organization" type="text" class="form-control form-control-sm">
+                        <div style="display: flex;">
+                            <app-language-field style="margin-right: auto; margin-top: 4px;" [title]="'Organization'" [form]="organizationForm"></app-language-field> 
                             <button class="btn btn-primary btn-sm" (click)="save('organization')">+</button>
-                        </form>
+                        </div>
                     </th>
                     <th>
-                        <form (submit)="save('channel')">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.channel" type="text" class="form-control form-control-sm">
+                        <div style="display: flex;">
+                            <app-language-field style="margin-right: auto; margin-top: 4px;" [title]="'Channel'" [form]="channelForm"></app-language-field> 
                             <button class="btn btn-primary btn-sm" (click)="save('channel')">+</button>
-                        </form>
+                        </div>
                     </th>
                     <th>
-                        <form (submit)="save('team')">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.team" type="text" class="form-control form-control-sm">
+                        <div style="display: flex;">
+                            <app-language-field style="margin-right: auto; margin-top: 4px;" [title]="'Team'" [form]="teamForm"></app-language-field> 
                             <button class="btn btn-primary btn-sm" (click)="save('team')">+</button>    
-                        </form>
+                        </div>
                     </th>
                     <th>
-                        <form (submit)="save('jobrole')">
-                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="this.model.jobrole" type="text" class="form-control form-control-sm">
+                        <div style="display: flex;">
+                            <app-language-field style="margin-right: auto; margin-top: 4px;" [title]="'Business Job Role'" [form]="businessJobRoleForm"></app-language-field> 
                             <button class="btn btn-primary btn-sm" (click)="save('jobrole')">+</button>
-                        </form>
+                        </div>
                     </th>
                 </tr>
                 <tr> 
                     <td>
                         <ul>
                             <li *ngFor="let item of list.organization; let i = index">
-                                {{item.name}}
+                                {{item.translation | itranslate}}
     
-                                <a (click)="delete(i , 'organization')">delete</a>
+                                <a (click)="delete(item , 'organization')">delete</a>
                             </li>
                         </ul>
                     </td>
                     <td>
                         <ul>
                             <li *ngFor="let item of list.channel; let i = index">
-                                {{item.name}}
+                                {{item.translation | itranslate}}
                                 
-                                <a (click)="delete(i , 'channel')">delete</a>
+                                <a (click)="delete(item , 'channel')">delete</a>
                             </li>
                         </ul>
                     </td>
                     <td>
                         <ul>
                             <li *ngFor="let item of list.team; let i = index">
-                                {{item.name}}
+                                {{item.translation | itranslate}}
                                 
-                                <a (click)="delete(i , 'team')">delete</a>
+                                <a (click)="delete(item , 'team')">delete</a>
                             </li>
                         </ul>
                     </td>
                     <td>
                         <ul>
                             <li *ngFor="let item of list.jobrole; let i = index">
-                                {{item.name}}
+                                {{item.translation | itranslate}}
     
-                                <a (click)="delete(i , 'jobrole')">delete</a>
+                                <a (click)="delete(item , 'jobrole')">delete</a>
                             </li>
                         </ul>
                     </td>

@@ -7,5 +7,5 @@ export interface IApplication {
     isAllowMultiple: boolean;
     attributes?: IAttribute[];
     // TODO : change to translates
-    translations?: ITranslates;
+    translates?: ITranslates;
 }

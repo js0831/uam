@@ -18,7 +18,7 @@ import { AttributeAssignmentService } from '../../services/attribute-assignment.
 })
 export class AttributesListComponent implements OnInit {
 
-  @Output() onchange = new EventEmitter<IAttribute[]>();
+  @Output() onchange = new EventEmitter<ApplicationAttributeInterface[]>();
 
   attribute: any = '';
   attributes$: Observable<IAttributeStore>;
@@ -71,7 +71,7 @@ export class AttributesListComponent implements OnInit {
     return lastOrder + 1;
   }
 
-  isAlreadyAdded(attributeId: string): boolean{
+  isAlreadyAdded(attributeId: number): boolean{
     return this.attributes.filter(x => attributeId === x.id).length > 0;
   }
 
