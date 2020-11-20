@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { OrganizationInterface } from '../../../../shared/interface/organization.interface';
 import { OrganizationService } from '../../../../shared/services/organization.service';
 import { ChannelService } from '../../../../shared/services/channel.service';
@@ -109,28 +109,38 @@ export class DummyDataComponent implements OnInit {
     }
   }
 
+  private resetTranslationForm(form: FormArray) {
+    while (form.value.length !== 0) {
+      form.removeAt(0);
+    }
+  }
+
   private async saveBusinessJobRole() {
     const translates = this.formatTranslation(this.businessJobRoleForm.value.translations);
     const response = await this.businessJobRoleService.create(translates);
     this.list.jobrole.push(response);
+    this.resetTranslationForm(this.businessJobRoleForm.get('translations') as FormArray);
   }
 
   private async saveTeam() {
     const translates = this.formatTranslation(this.teamForm.value.translations);
     const response = await this.teamService.create(translates);
     this.list.team.push(response);
+    this.resetTranslationForm(this.teamForm.get('translations') as FormArray);
   }
 
   private async saveChannel() {
     const translates = this.formatTranslation(this.channelForm.value.translations);
     const response = await this.channelService.create(translates);
     this.list.channel.push(response);
+    this.resetTranslationForm(this.channelForm.get('translations') as FormArray);
   }
 
   private async saveOrganization() {
     const translates = this.formatTranslation(this.organizationForm.value.translations);
     const response = await this.organizationService.create(translates);
     this.list.organization.push(response);
+    this.resetTranslationForm(this.organizationForm.get('translations') as FormArray);
   }
 
   delete(item, what): void {
