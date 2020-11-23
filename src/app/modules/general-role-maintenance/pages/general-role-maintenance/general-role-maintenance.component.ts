@@ -77,8 +77,6 @@ export class GeneralRoleMaintenanceComponent implements OnInit {
       return;
     }
 
-    console.log(this.form.value);
-    console.log(this.generalRoleData);
     alert('Success');
     this.router.navigate(['general-role-maintenance']);
   }

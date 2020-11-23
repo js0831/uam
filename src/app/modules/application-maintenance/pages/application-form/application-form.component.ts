@@ -90,7 +90,6 @@ export class ApplicationFormComponent implements OnInit {
   }
 
   onAttributeSelect(event) {
-    console.log(event);
   }
 
 }

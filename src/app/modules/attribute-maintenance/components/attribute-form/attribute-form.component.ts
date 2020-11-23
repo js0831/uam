@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { Store } from '@ngrx/store';
@@ -42,7 +42,7 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
 
   private watchAttributeStore(): Subscription{
     return this.store.select('attribute').subscribe( x => {
-      if ( x.edit ) {
+      if (x.edit) {
         this.editAttribute = x.edit;
         this.showModal = true;
         this.modalTitle = 'Edit ' + x.edit.id;

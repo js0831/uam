@@ -1,11 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { IAttributeStore } from '../../interface/attribute-store.interface';
-import { addOption, deleteOption, setDefaultOption } from '../../store/attribute.actions';
+import { addOption, deleteOption, setOptionsOnEdit, setDefaultOption } from '../../store/attribute.actions';
 import { IOption } from './../../interface/option.interface';
 import { LanguageFieldService } from './../../../../shared/services/language-field.service';
+import { ApplicationAttributeOptionService } from './../../../../shared/services/application-attribute-option.service';
+import { ITranslates } from '../../../application-maintenance/interface/i-translates.interface';
+import { ApplicationAttributeService } from '../../../../shared/services/application-attribute.service';
+import { ApplicationAttributeOptionInterface } from '../../../../shared/interface/application-attribute-option.interface';
 
 @Component({
   selector: 'app-attribute-options',
@@ -14,31 +18,39 @@ import { LanguageFieldService } from './../../../../shared/services/language-fie
 })
 export class AttributeOptionsComponent implements OnInit, OnDestroy {
 
-  @Input() attributeId: string;
+  @Input() attributeId: number;
 
   form: FormGroup;
-  options: IOption[] = [];
+  options: ApplicationAttributeOptionInterface[] = [];
   subscription: Subscription[] = [];
   showDescription = true;
 
   constructor(
     private fb: FormBuilder,
     private store: Store<{attribute: IAttributeStore}>,
-    private languageFieldService: LanguageFieldService
+    private languageFieldService: LanguageFieldService,
+    private applicationAttributeOptionService: ApplicationAttributeOptionService,
+    private applicationAttributeService: ApplicationAttributeService,
   ) { }
 
   ngOnInit(): void {
     this.buildForm();
     this.subscription = [
-      this.watchAttributeStore()
+      this.watchAttributeStore(),
     ];
+    this.fetchAttributeOptions()
+  }
+
+  private async fetchAttributeOptions() {
+    const response = await this.applicationAttributeService.fetchAttributeOptions(this.attributeId);
+    this.options = response.lstOptn;
+    this.store.dispatch(setOptionsOnEdit({ payload: response.lstOptn }));
   }
 
   private watchAttributeStore(): Subscription{
     return this.store.select('attribute').subscribe( x => {
       if ( x.edit ) {
-        console.log('watchAttributeStore', x.edit);
-        this.options = x.edit.options;
+        this.options = (x.edit.options as any) || [];
       }
     });
   }
@@ -50,25 +62,33 @@ export class AttributeOptionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  add(): void {
+  formatTranslation(translations: { language: string, value: string }[]): ITranslates {
+    const formattedData: any = {};
+    translations.forEach(item => formattedData[item.language] = item.value);
+    return formattedData;
+  }
+
+  async add(): Promise<void> {
     this.form.markAllAsTouched();
     if (!this.isValidForm()) {
       return;
     }
 
     const data = {
-      id: new Date().getTime().toString(),
       value: this.form.value.value,
-      isDefault: false,
-      translations: this.form.value.translations
+      isDefault: this.options.length === 0,
+      translation: this.formatTranslation(this.form.value.translations)
     };
+
+    const response = await this.applicationAttributeOptionService.create(this.attributeId, data);
 
     this.store.dispatch(addOption({
         id: this.attributeId,
-        option: data
+        option: response
     }));
     this.form.reset();
     this.showDescription = false;
+
     setTimeout( x => {
       this.showDescription = true;
     });
@@ -79,7 +99,7 @@ export class AttributeOptionsComponent implements OnInit, OnDestroy {
       alert('All fields are required');
       return false;
     }
-    const englishTranslationExist = this.form.value.translations.filter( x => x.language === '1');
+    const englishTranslationExist = this.form.value.translations.filter( x => x.language === 'en');
     if (englishTranslationExist.length === 0) {
       alert('English Translation is required');
       return false;

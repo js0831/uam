@@ -117,7 +117,6 @@ export class AttributesListComponent implements OnInit {
   }
 
   updateAttributeOrder(draggedAttribute: IAttribute, droppedOrder: number): void {
-
     this.attributes = this.attributes.map( x => {
       if (draggedAttribute.order > droppedOrder) {
         if (x.order === draggedAttribute.order){

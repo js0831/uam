@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
+import { ApplicationAttributeOptionInterface } from '../../../shared/interface/application-attribute-option.interface';
 import { ApplicationAttributeInterface } from '../../../shared/interface/application-attribute.interface';
 import { IOption } from '../interface/option.interface';
-import { IAttribute } from './../interface/attribute.interface';
 
 const component = '[Attribute Component]';
 
@@ -10,6 +10,7 @@ export const create = createAction(`${component } Create`, props<{ attribute: Ap
 export const remove = createAction(`${component } Remove`, props<{ payload: string }>());
 export const edit = createAction(`${component } Edit`, props<{ attribute: ApplicationAttributeInterface }>());
 export const update = createAction(`${component } Update`, props<{ attribute: ApplicationAttributeInterface }>());
-export const addOption = createAction(`${component } Add option`, props<{ id: string, option: IOption } >());
+export const addOption = createAction(`${component } Add option`, props<{ id: number, option: ApplicationAttributeOptionInterface } >());
+export const setOptionsOnEdit = createAction(`${component } Set options`, props<{ payload: ApplicationAttributeOptionInterface[] }>());
 export const deleteOption = createAction(`${component } Delete option`, props<{ id: string }>());
 export const setDefaultOption = createAction(`${component } Set Default option`, props<{ option: IOption }>());

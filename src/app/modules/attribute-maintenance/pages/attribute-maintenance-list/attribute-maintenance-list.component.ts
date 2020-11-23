@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { edit, remove, set } from './../../store/attribute.actions';
 import { ApplicationAttributeService } from '../../../../shared/services/application-attribute.service';
-import { ApplicationAttributeInterface } from '../../../../shared/interface/application-attribute.interface';
+import { IAttributeStore } from '../../interface/attribute-store.interface';
 
 @Component({
   selector: 'app-attribute-maintenance-list',
@@ -13,12 +13,12 @@ import { ApplicationAttributeInterface } from '../../../../shared/interface/appl
 })
 export class AttributeMaintenanceListComponent implements OnInit, OnDestroy{
 
-  attributes$: Observable<ApplicationAttributeInterface>;
+  attributes$: Observable<IAttributeStore>;
 
   constructor(
     private modalService: ModalService,
     private applicationAttributeService: ApplicationAttributeService,
-    private store: Store<{attribute: ApplicationAttributeInterface}>
+    private store: Store<{attribute: IAttributeStore}>
   ) {
     this.attributes$ = store.select('attribute');
   }
@@ -40,7 +40,6 @@ export class AttributeMaintenanceListComponent implements OnInit, OnDestroy{
   async delete(attr): Promise<void> {
     if (confirm('Are you sure you want to delete this item?')) {
       const response = await this.applicationAttributeService.delete(attr);
-      console.log(response);
       this.store.dispatch(remove({
         payload: attr.id
       }));

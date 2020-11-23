@@ -34,7 +34,6 @@ export class ApplicationAssignmentComponent implements OnInit {
     if (!this.application) { return; }
     this.applications$.subscribe( (x: IApplicationStore) => {
       const toAdd = x.list.filter(attr => attr.id === this.application)[0];
-      console.log(this.applications, toAdd);
       this.applications.push(toAdd);
     });
 

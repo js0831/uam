@@ -1,10 +1,9 @@
 import { createReducer, on } from '@ngrx/store';
-import { LocalDataService } from 'src/app/shared/services/local-data.service';
 import { IAttributeStore } from '../interface/attribute-store.interface';
-import { deleteOption, addOption, create, edit, remove, update, setDefaultOption, set } from './attribute.actions';
+import { deleteOption, setOptionsOnEdit, addOption, create, edit, remove, update, setDefaultOption, set } from './attribute.actions';
 
 export const initialState: IAttributeStore = {
-  list: new LocalDataService().get('attributes') || [],
+  list: [],
   edit: null
 };
 
@@ -16,9 +15,20 @@ const reducer = createReducer(
     on(edit, (state, action) => editAttribute(state, action)),
     on(update, (state, action) => updateAttribute(state, action)),
     on(addOption, (state, action) => addOptionOnState(state, action)),
+    on(setOptionsOnEdit, (state, action) => setOptionsOnEditReducer(state, action)),
     on(deleteOption, (state, action) => deleteOptionState(state, action)),
     on(setDefaultOption, (state, action) => setDefaultOptionState(state, action)),
 );
+
+function setOptionsOnEditReducer(state, action): IAttributeStore {
+  return {
+    ...state,
+    edit: {
+      ...state.edit,
+      options: action.payload
+    }
+  };
+}
 
 function setAttribute(state, action): IAttributeStore {
   return {
@@ -72,7 +82,7 @@ function addOptionOnState(state, action): IAttributeStore {
     edit: {
       ...state.edit,
       options: [
-        ...state.edit.options,
+        ...state.edit.options || [],
         action.option
       ]
     },
@@ -82,7 +92,7 @@ function addOptionOnState(state, action): IAttributeStore {
           return {
             ...x,
             options: [
-              ...x.options,
+              ...x.options || [],
               action.option
             ]
           };

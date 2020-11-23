@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ApplicationAttributeInterface } from '../interface/application-attribute.interface';
+import { ApplicationAttributeOptionInterface } from '../interface/application-attribute-option.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,14 @@ export class ApplicationAttributeService {
 
   private url(url: string) {
     return `${environment.hostUrl}${url}`;
+  }
+
+  public fetchAttributeOptions(roleAttributeId: number): Promise<{ roleAttr: ApplicationAttributeInterface, lstOptn: ApplicationAttributeOptionInterface[] }> {
+    return this.httpClient.get<{ roleAttr: ApplicationAttributeInterface, lstOptn: ApplicationAttributeOptionInterface[] }>(this.url('/roleattribute/getRoleAttributeById'), {
+      params: {
+        roleAttributeId: roleAttributeId.toString()
+      }
+    }).toPromise();
   }
 
   public fetch(): Promise<ApplicationAttributeInterface[]> {
