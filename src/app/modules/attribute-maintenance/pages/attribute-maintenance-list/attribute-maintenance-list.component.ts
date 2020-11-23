@@ -39,7 +39,7 @@ export class AttributeMaintenanceListComponent implements OnInit, OnDestroy{
 
   async delete(attr): Promise<void> {
     if (confirm('Are you sure you want to delete this item?')) {
-      const response = await this.applicationAttributeService.delete(attr);
+      await this.applicationAttributeService.delete(attr);
       this.store.dispatch(remove({
         payload: attr.id
       }));

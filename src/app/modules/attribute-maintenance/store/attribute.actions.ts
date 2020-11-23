@@ -13,4 +13,5 @@ export const update = createAction(`${component } Update`, props<{ attribute: Ap
 export const addOption = createAction(`${component } Add option`, props<{ id: number, option: ApplicationAttributeOptionInterface } >());
 export const setOptionsOnEdit = createAction(`${component } Set options`, props<{ payload: ApplicationAttributeOptionInterface[] }>());
 export const deleteOption = createAction(`${component } Delete option`, props<{ id: string }>());
+export const updateOptionInEdit = createAction(`${component } Update option`, props<{ payload: ApplicationAttributeOptionInterface }>());
 export const setDefaultOption = createAction(`${component } Set Default option`, props<{ option: IOption }>());

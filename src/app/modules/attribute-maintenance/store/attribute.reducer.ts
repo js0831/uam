@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { IAttributeStore } from '../interface/attribute-store.interface';
-import { deleteOption, setOptionsOnEdit, addOption, create, edit, remove, update, setDefaultOption, set } from './attribute.actions';
+import { updateOptionInEdit, deleteOption, setOptionsOnEdit, addOption, create, edit, remove, update, setDefaultOption, set } from './attribute.actions';
 
 export const initialState: IAttributeStore = {
   list: [],
@@ -16,10 +16,25 @@ const reducer = createReducer(
     on(update, (state, action) => updateAttribute(state, action)),
     on(addOption, (state, action) => addOptionOnState(state, action)),
     on(setOptionsOnEdit, (state, action) => setOptionsOnEditReducer(state, action)),
+    on(updateOptionInEdit, (state, action) => updateOptionInEditReducer(state, action)),
     on(deleteOption, (state, action) => deleteOptionState(state, action)),
     on(setDefaultOption, (state, action) => setDefaultOptionState(state, action)),
 );
 
+function updateOptionInEditReducer(state, action): IAttributeStore {
+  return {
+    ...state,
+    edit: {
+      ...state.edit,
+      options: state.edit.options.map(item => {
+        if (item.id !== action.payload.id) {
+          return item;
+        }
+        return action.payload;
+      })
+    }
+  };
+}
 function setOptionsOnEditReducer(state, action): IAttributeStore {
   return {
     ...state,
@@ -40,6 +55,7 @@ function setAttribute(state, action): IAttributeStore {
 function createAttribute(state, action): IAttributeStore {
   return {
     ...state,
+    edit: null,
     list: [...state.list, action.attribute]
   };
 }
@@ -47,6 +63,7 @@ function createAttribute(state, action): IAttributeStore {
 function removeAttribute(state, action): IAttributeStore {
   return {
     ...state,
+    edit: null,
     list: [...state.list.filter( x => x.id !== action.payload)]
   };
 }

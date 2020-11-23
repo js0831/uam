@@ -23,11 +23,12 @@ export class ApplicationAttributeOptionService {
     .then(response => response.roleAttrOptn);
   }
 
-  public update(applicationAttributeId: number, applicationAttributeOption: ApplicationAttributeOptionInterface) {
-    return this.httpClient.post(this.url('/roleattributeoption/update'), {
+  public update(applicationAttributeId: number, applicationAttributeOption: ApplicationAttributeOptionInterface): Promise<ApplicationAttributeOptionInterface> {
+    return this.httpClient.post<{ roleAttrOptn: ApplicationAttributeOptionInterface }>(this.url('/roleattributeoption/update'), {
       roleAttrId: applicationAttributeId,
       roleAttrOptn: applicationAttributeOption
-    }).toPromise();
+    }).toPromise()
+    .then(response => response.roleAttrOptn);
   }
 
   public delete(applicationAttrId: number, applicationAttribute: ApplicationAttributeOptionInterface) {
