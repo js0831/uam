@@ -100,7 +100,7 @@ export class AttributeOptionsComponent implements OnInit, OnDestroy {
     };
     const response = await this.applicationAttributeOptionService.update(this.attributeId, this.selectedEditAttributeOption);
     this.store.dispatch(updateOptionInEdit({ payload: response }));
-    this.resetTranslationForm(this.form.get('translations'));
+    this.resetTranslationForm(this.form.get('translations') as FormArray);
     this.form.reset();
   }
 
