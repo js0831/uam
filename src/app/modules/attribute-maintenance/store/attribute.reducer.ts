@@ -64,7 +64,7 @@ function updateAttribute(state, action): IAttributeStore {
     edit: null,
     list: [
       ...state.list.map( x => {
-        if (x.guid === action.attribute.guid){
+        if (x.id === action.attribute.id){
           return {
             ...x,
             ...action.attribute
@@ -104,21 +104,12 @@ function addOptionOnState(state, action): IAttributeStore {
 }
 
 function deleteOptionState(state, action): IAttributeStore {
-  const newEdit = {
-    ...state.edit,
-    options: state.edit.options.filter( x => (x && x.id) !== action.id)
-  };
   return {
     ...state,
-    edit: newEdit,
-    list: [
-      ...state.list.map( x => {
-        if (x.guid === newEdit.guid){
-          return newEdit;
-        }
-        return x;
-      })
-    ]
+    edit: {
+      ...state.edit,
+      options: state.edit.options.filter(item => item.id !== action.id)
+    }
   };
 }
 

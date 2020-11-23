@@ -23,14 +23,17 @@ export class ApplicationAttributeOptionService {
     .then(response => response.roleAttrOptn);
   }
 
-  public fetch() {
-    // return this.httpClient.get(this.url())
-  }
-
   public update(applicationAttributeId: number, applicationAttributeOption: ApplicationAttributeOptionInterface) {
     return this.httpClient.post(this.url('/roleattributeoption/update'), {
       roleAttrId: applicationAttributeId,
       roleAttrOptn: applicationAttributeOption
+    }).toPromise();
+  }
+
+  public delete(applicationAttrId: number, applicationAttribute: ApplicationAttributeOptionInterface) {
+    return this.httpClient.post(this.url('/roleattributeoption/delete'), {
+      roleAttrId: applicationAttrId,
+      roleAttrOptn: applicationAttribute
     }).toPromise();
   }
 

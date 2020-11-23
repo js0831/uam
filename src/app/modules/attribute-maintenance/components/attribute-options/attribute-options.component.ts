@@ -107,13 +107,13 @@ export class AttributeOptionsComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  delete(option: IOption): void {
-    const sure = confirm('Are you sure?');
-    if (!sure) { return; }
-
-    this.store.dispatch(deleteOption({
-      id: option.id
-    }));
+  async delete(option: ApplicationAttributeOptionInterface): Promise<void> {
+    if (confirm('Are you sure?')) {
+      await this.applicationAttributeOptionService.delete(this.attributeId, option);
+      this.store.dispatch(deleteOption({
+        id: option.id
+      }));
+    }
   }
 
   edit(option: IOption): void {

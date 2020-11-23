@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { Store } from '@ngrx/store';
@@ -45,7 +45,7 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
       if (x.edit) {
         this.editAttribute = x.edit;
         this.showModal = true;
-        this.modalTitle = 'Edit ' + x.edit.id;
+        this.modalTitle = 'Edit ' + x.edit.attbName;
         this.submitButtonText = 'Update';
         setTimeout( y => {
           this.fillAttributeForm(x.edit);
@@ -54,8 +54,15 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  private resetTranslationForm(form: FormArray) {
+    while (form.value.length !== 0) {
+      form.removeAt(0);
+    }
+  }
+
   private fillAttributeForm(data): void {
     this.form.patchValue(data);
+    this.resetTranslationForm(this.form.get('translations') as FormArray);
     const translation = [];
     Object.keys(data.translation).forEach(key => {
       if (key !== 'id' && data.translation[key]) {
@@ -139,6 +146,7 @@ export class AttributeFormComponent implements OnInit, OnDestroy {
       }
     };
     const response = await this.applicationAttributeService.update(updateData);
+    console.log(response);
     this.store.dispatch(update({
       attribute: response
     }));
